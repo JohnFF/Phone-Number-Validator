@@ -1,15 +1,9 @@
 <?php
 
-//require_once 'CiviTest/CiviUnitTestCase.php';
-
 ini_set('include_path', '/var/www/html/prod/drupal');
 require_once '/var/www/html/prod/drupal/sites/all/modules/civicrm/civicrm.config.php';
-require_once 'CRM/Core/Config.php';
 CRM_Core_Config::singleton();
 
-/**
- * FIXME
- */
 // class CRM_Phonenumbervalidator_UtilsTest extends CiviUnitTestCase {
 class CRM_Phonenumbervalidator_UtilsTest extends PHPUnit_Framework_TestCase {
   function setUp() {
@@ -57,6 +51,10 @@ class CRM_Phonenumbervalidator_UtilsTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals($expectedValues, $actualValues, "Found " . print_r($actualValues, TRUE));
   }
   
+  /**
+   * Test the regex rules. To keep it a pure test, this assumes all the character substitution has already been done.
+   * TODO refactor to be more generic.
+   */
   function testRegexRuleMatches () {
     $invalidBritishNumbers = array(
       "0711111111", // too short
@@ -64,7 +62,15 @@ class CRM_Phonenumbervalidator_UtilsTest extends PHPUnit_Framework_TestCase {
       "non-numeric", // non numeric
       "07111111111 chars", // valid num with some chars on end
     );
-    // TODO
+
+    $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'regex_rules');
+    $britishRegexRules = $regexRules['Britain'];
+
+    foreach ($invalidBritishNumbers as $invalidBritishNumber) {
+      foreach ($britishRegexRules as $britishRegexRule) { 
+        $this->assertEquals(0, preg_match('/' . $britishRegexRule['regex'] . '/', $invalidBritishNumber)); 
+      }
+    }
   }
   
   function testGetRegexRule(){
@@ -78,63 +84,13 @@ class CRM_Phonenumbervalidator_UtilsTest extends PHPUnit_Framework_TestCase {
     CRM_Phonenumbervalidator_Utils::getRegexRule($regexRuleSets, 'Britain_invalidid');
     
     $this->setExpectedException(
-      'Exception', 'Phone Number Validator getRegexRule: Id does not exist for country Britain - see log error.'
+      'Exception', 'Phone Number Validator getRegexRule: Country does not exist - see log error.'
     );
     CRM_Phonenumbervalidator_Utils::getRegexRule($regexRuleSets, 'invalid_id');
     
-    //TODO: 
-    //CRM_Phonenumbervalidator_Utils::getRegexRule($regexRuleSets, 'invalidid');
-  }
-  
-  function testBuildReplacementMysqlString () {
-    // Test hyphens and brackets.
-    $selectedAllowCharactersArray = array('hyphens', 'brackets');
-    $expectedOutput = "REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '')";
-    $output = CRM_Phonenumbervalidator_Utils::buildReplacementMysqlString($selectedAllowCharactersArray);
-    $this->assertEquals($expectedOutput, $output, "Found " . print_r($output, TRUE));
-    
-    // Test no ignore characts.
-    $selectedIgnoreCharactersArray = array();
-    $expectedOutput = "phone";
-    $output = CRM_Phonenumbervalidator_Utils::buildReplacementMysqlString($selectedIgnoreCharactersArray);
-    $this->assertEquals($expectedOutput, $output, "Found " . print_r($output, TRUE));
-  }
-  
-  function testBuildFromStatementMyqlString () {
-    $selectedRegexRuleIds = array('Britain_0', 'Britain_1', 'Britain_2', 'Britain_3');
-    $selectedAllowCharacterRules = array('hyphens', 'brackets');
-    
-    $expectedOutput = "FROM (SELECT id, phone, phone_ext, phone_type_id, contact_id FROM civicrm_phone WHERE "
-            . "(REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '') NOT REGEXP '^0[^7][0-9]{9}$') AND "
-            . "(REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '') NOT REGEXP '^07[0-9]{9}$') AND "
-            . "(REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '') NOT REGEXP '^0044[^7][0-9]{9}$') AND "
-            . "(REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '') NOT REGEXP '^00447[0-9]{9}$')) "
-            . "AS phone JOIN civicrm_contact AS contact ON phone.contact_id = contact.id ";
-    $output = CRM_Phonenumbervalidator_Utils::buildFromStatementMyqlString($selectedRegexRuleIds, $selectedAllowCharacterRules);
-    
-    $this->assertEquals($expectedOutput, $output, "Found " . print_r($output, TRUE));
-  }
-  
-  function testBuildWhereStatementMyqlString () {
-    $testData = array(
-      array(
-          'contactTypeId' => '1', 
-          'phoneTypeId' => '1', 
-          'expectedStatementOutput' => "WHERE 1 AND contact_type LIKE '%%1%' AND phone_type_id = '%2' ",
-          'expectedParamsOutput' => array(1 => array(0 => 'Individual', 1 => 'String', 2 => 2), 2 => array(0 => 1, 1 => 'Int')),
-      ),
-      //array('contactTypeId' => '', 'phoneTypeId' => '1', 'expectedOutput' => "WHERE 1 AND phone_type_id = '%2' "),
-      //array('contactTypeId' => '1', 'phoneTypeId' => '', 'expectedOutput' => "WHERE 1 AND contact_type LIKE '%%1%' "),
-//      array('contactTypeId' => '1000', 'phoneTypeId' => '1', 'expectedOutput' => ''),
-//      array('contactTypeId' => '1', 'phoneTypeId' => '1000', 'expectedOutput' => ''),
-//      array('contactTypeId' => 'string where id should be', 'phoneTypeId' => '1', 'expectedOutput' => ''),
-//      array('contactTypeId' => '1', 'phoneTypeId' => 'string where id should be', 'expectedOutput' => ''),
+    $this->setExpectedException(
+      'Exception', 'Phone Number Validator getRegexRule: Incorrect number of underscores found.'
     );
-    
-    foreach($testData as $eachTest){
-      $actualOutput = CRM_Phonenumbervalidator_Utils::buildWhereStatementMysqlString($eachTest['contactTypeId'], $eachTest['phoneTypeId']);
-      $this->assertEquals($eachTest['expectedStatementOutput'], $actualOutput['statement'], "Test failed, actual output was: " . print_r($actualOutput['statement'], TRUE));
-      $this->assertEquals($eachTest['expectedParamsOutput'], $actualOutput['params'], "Test failed, actual output was: " . print_r($actualOutput['params'], TRUE));
-    }
+    CRM_Phonenumbervalidator_Utils::getRegexRule($regexRuleSets, 'invalidid');
   }
 }

@@ -129,12 +129,12 @@ function retrieveInvalidPhoneNumbersCount(selectedRegexIds, selectedAllowCharact
     );
 }    
 
-function retrieveInvalidPhoneNumbers(selectedRegexIds, selectedAllowCharacters, selectedPhoneTypeId, selectedContactTypeId){
+function retrieveInvalidPhoneNumbers(selectedRegexIds, selectedAllowCharactersIds, selectedPhoneTypeId, selectedContactTypeId){
     // Get and insert the new entries.
     CRM.api('PhoneNumberValidator', 'Getinvalidphones', {
         'sequential': 1, 
         'selectedRegexIds': selectedRegexIds, 
-        'selectedAllowCharacters': selectedAllowCharacters, 
+        'selectedAllowCharactersIds': selectedAllowCharactersIds, 
         'selectedPhoneTypeId': selectedPhoneTypeId, 
         'selectedContactTypeId': selectedContactTypeId
     },

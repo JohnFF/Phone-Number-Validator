@@ -3,18 +3,11 @@
 class CRM_Phonenumbervalidator_Utils {
   
   /*
-   * Installs some default valid phone validation rules and other settings.
-   */
-  // TODO split into two install functions  
-  public static function installDefaults() {
-    // Check if the setting is already present.
-    $aValidPhonesRegex = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'regex_rules');
-    if ($aValidPhonesRegex) {
-      return TRUE;
-    }
-
+   * Install the valid phone number regexes.
+   */  
+  public static function installPhoneNumberRegexes(){
     // Add valid phone matching regexes. This structure allows each to have its own id and name, but be grouped together in the interface.
-    $aValidPhonesRegex = array(
+    $aValidPhonesRegexes = array(
       'Australia' => array(
         array('label' => 'Australia Landline',               'regex' => '^0[^4][0-9]{8}$'),
         array('label' => 'Australia Mobile',                 'regex' => '^04[0-9]{8}$')
@@ -33,70 +26,59 @@ class CRM_Phonenumbervalidator_Utils {
       ),
     );
     
-    CRM_Core_BAO_Setting::setItem($aValidPhonesRegex, 'com.civifirst.phonenumbervalidator',
+    CRM_Core_BAO_Setting::setItem($aValidPhonesRegexes, 'com.civifirst.phonenumbervalidator',
         'regex_rules');
-    CRM_Core_BAO_Setting::setItem('-1', 'com.civifirst.phonenumbervalidator', 'last_selected_regex');
+    
+    // Check if the settings are now present (as setItem returns void).
+    $aStoredValidPhonesRegexes = CRM_Core_BAO_Setting::getItem(
+      'com.civifirst.phonenumbervalidator', 'regex_rules');
+    
+    if (!$aStoredValidPhonesRegexes) {
+      throw new Exception('Phone Number Validator Install: Could not store the phone regexes.');
+    }
+  }  
+    
+  /*
+   * Add a placeholder for the last selected values in the interface.
+   */
+  public static function installLastSelectedSettingsDefault(){
+    CRM_Core_BAO_Setting::setItem('-1', 'com.civifirst.phonenumbervalidator', 'last_selected_settings');
 
     // Check if the settings are now present (as setItem returns void).
-    $aStoredCountryRegex = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator',
-        'regex_rules');
-    $iStoredLastSelectedRegex = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator',
-        'last_selected_regex');
-    if ($aStoredCountryRegex && $iStoredLastSelectedRegex) {
-      return TRUE;
+    $aStoredLastSelectedSettings = CRM_Core_BAO_Setting::getItem(
+      'com.civifirst.phonenumbervalidator', 'last_selected_settings');
+    
+    if (!$aStoredLastSelectedSettings) {
+      throw new Exception('Phone Number Validator Install: Could not store the phone regexes.');
     }
-
-    throw new Exception('Could not create the regex settings. Country Regex: ' . 
-        $aValidPhonesRegex . 'Last Selected: '. $iLastSelectedRegex);
   }
-  
+          
+  /*
+   * Installs some default valid phone validation rules and other settings.
+   */
+  public static function installDefaults() {
+    // Remove the settings if they are already present.
+    self::deleteDbSettings();
+    self::installPhoneNumberRegexes();
+    self::installLastSelectedSettingsDefault();
+  }
+       
+  /*
+   * Removes all settings from civicrm DB added by the phonenumbervalidator.
+   */
   public static function deleteDbSettings () {
     $deleteMysql = 'DELETE FROM civicrm_setting WHERE group_name = "com.civifirst.phonenumbervalidator"';
     CRM_Core_DAO::executeQuery($deleteMysql);
   }
   
-  /* TODO */
-  public static function buildReplacementMysqlString ($selectedAllowCharactersArray) {
-    
-    if (in_array('plus', $selectedAllowCharactersArray)){
-      // Replace the + with 00 only for the first letter
-      // then concatenate it with the rest of the phone number
-      $mysqlPhoneString = "CONCAT(REPLACE(SUBSTRING(phone,1,1), '+', '00'), "
-              . "SUBSTRING(phone,2,LENGTH(phone)-1))";
-    }
-    else {
-      $mysqlPhoneString = "phone";
-    }
-    
-    $charactersToAllowArray = array();
-    
-    if (in_array('hyphens', $selectedAllowCharactersArray)) {
-      $charactersToAllowArray[] = '-';
-    }
-    
-    if (in_array('fullstops', $selectedAllowCharactersArray)) {
-      $charactersToAllowArray[] = '.';
-    }
-
-    if (in_array('brackets', $selectedAllowCharactersArray)) {
-      $charactersToAllowArray[] = '(';
-      $charactersToAllowArray[] = ')';
-    }
-    
-    if (in_array('spaces', $selectedAllowCharactersArray)){
-      $charactersToAllowArray[] = ' ';
-    }
-    
-    foreach ($charactersToAllowArray as $characterToAllow) {
-      $mysqlPhoneString = "REPLACE($mysqlPhoneString, '$characterToAllow', '')";
-    }
-    
-    return $mysqlPhoneString;
-  }
+  
   
   /* TODO */
   public static function getRegexRule($regexRuleSets, $ruleId){
     // TODO check that $ruleId has one _ or assert
+    if (substr_count($ruleId, '_') != 1){
+      throw new exception("Phone Number Validator getRegexRule: Incorrect number of underscores found." . $ruleId); // TODO write to error log   
+    }
       
     $ruleIdArrayRaw = explode("_", $ruleId);
     $ruleIdArray = array('country' => $ruleIdArrayRaw[0], 'id' => $ruleIdArrayRaw[1]);
@@ -118,68 +100,12 @@ class CRM_Phonenumbervalidator_Utils {
   }
   
   /* TODO */
-  public static function buildFromStatementMyqlString ($selectedRegexRuleIds, $selectedAllowCharacterRules) {
-    $getBrokenPhonesFromSql = "FROM ";
-    $getBrokenPhonesFromSql .= "(SELECT id, phone, phone_ext, phone_type_id, contact_id "
-        . "FROM civicrm_phone WHERE ";
-
-    $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'regex_rules');
-
-    $fromRegexSql = array();
-
-    $phoneMysqlString = self::buildReplacementMysqlString($selectedAllowCharacterRules);
-
-    foreach($selectedRegexRuleIds as $ruleId){
-      $fromRegexSql[] = "($phoneMysqlString NOT REGEXP '" . self::getRegexRule($regexRules, $ruleId) . "')";
+  public static function getSelectedRegexRules(array $selectedRegexRuleIds){
+    $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'regex_rules');  
+    $selectedRegexRules = array();
+    foreach($selectedRegexRuleIds as $selectedRegexRuleId){
+      $selectedRegexRules[] = self::getRegexRule($regexRules, $selectedRegexRuleId);
     }
-
-    $getBrokenPhonesFromSql .=  implode(" AND ", $fromRegexSql) . ") AS phone ";
-    $getBrokenPhonesFromSql .= 'JOIN civicrm_contact AS contact '
-        . 'ON phone.contact_id = contact.id ';
-
-    return $getBrokenPhonesFromSql;
-  }
-  
-  public static function buildWhereStatementMysqlString($selectedContactTypeId, $selectedPhoneTypeId){
-    
-    $getBrokenPhonesWhereSql = "WHERE 1 ";
-    $queryParameters = array();
-    
-    if ($selectedContactTypeId){
-      // Check that we have been passed an integer.
-      if (intval($selectedContactTypeId) == 0) {
-        throw new exception("Phone Number Validator - passed an invalid selected contact type id. String received");
-      }
-      
-      // Retrieve information about the civicrm contact type. via the api
-      $getContactTypesParams = array(
-        'version' => 3,
-        'sequential' => 1,
-        'id' => $selectedContactTypeId,
-      );
-      $getContactTypesResults = civicrm_api('ContactType', 'getsingle', $getContactTypesParams);
-    
-      if (civicrm_error($getContactTypesResults)){
-        // TODO 
-      }
-      
-      // If the contact type has a parent id then it is a contact sub type.
-      // Otherwise it's a contact type.
-      if (array_key_exists('parent_id', $getContactTypesResults)){
-        $getBrokenPhonesWhereSql .= "AND contact_sub_type LIKE '%%1%' ";
-        $queryParameters['1'] = array($getContactTypesResults['name'], 'String', CRM_Core_DAO::QUERY_FORMAT_NO_QUOTES);
-      }
-      else { 
-        $getBrokenPhonesWhereSql .= "AND contact_type LIKE '%%1%' ";
-        $queryParameters['1'] = array($getContactTypesResults['name'], 'String', CRM_Core_DAO::QUERY_FORMAT_NO_QUOTES);
-      }
-    }
-
-    if ($selectedPhoneTypeId){
-      $getBrokenPhonesWhereSql .= "AND phone_type_id = '%2' ";
-      $queryParameters['2'] = array($selectedPhoneTypeId, 'Int');  
-    }
-    
-    return array('statement' => $getBrokenPhonesWhereSql, 'params' => $queryParameters);
+    return $selectedRegexRules;
   }
 }

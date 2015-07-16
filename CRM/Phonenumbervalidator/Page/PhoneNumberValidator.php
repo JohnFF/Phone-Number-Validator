@@ -8,7 +8,7 @@ class CRM_Phonenumbervalidator_Page_PhoneNumberValidator extends CRM_Core_Page {
     
     // TODO error checking in case it doesn't work.  
     $this->assign('regex_rules', $regexRuleSets);
-    
+  
     $this->assign('allow_options', array(
       'spaces'    => 'Allow spaces',
       'hyphens'   => 'Allow hyphens',

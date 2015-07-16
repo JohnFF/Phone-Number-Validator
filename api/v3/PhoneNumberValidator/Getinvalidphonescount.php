@@ -25,35 +25,18 @@ function _civicrm_api3_phone_number_validator_getinvalidphonescount_spec(&$spec)
  * @throws API_Exception
  */
 function civicrm_api3_phone_number_validator_getinvalidphonescount($params) {
-
   $selectedContactTypeId = $params['selectedContactTypeId'];
   $selectedPhoneTypeId   = $params['selectedPhoneTypeId'];
     
   $selectedRegexRuleIds = $params['selectedRegexIds'];
-  $selectedAllowCharacterRules = $params['selectedAllowCharacters'];
+  $selectedSubstitutionRuleIds = $params['selectedAllowCharactersIds'];
   
-  // We use one large SQL query instead of API calls for efficiency.
-  $getBrokenPhonesCountSql = "SELECT count(contact.id) AS count ";
-  
-  // Assemble FROM statement.
-  $getBrokenPhonesFromSql = CRM_Phonenumbervalidator_Utils::buildFromStatementMyqlString($selectedRegexRuleIds, $selectedAllowCharacterRules);
-  
-  // Assemble WHERE statement.
-  $getBrokenPhonesWhereSqlArray = CRM_Phonenumbervalidator_Utils::buildWhereStatementMysqlString($selectedContactTypeId, $selectedPhoneTypeId);
-   
   try {
-    $queryString = $getBrokenPhonesCountSql . 
-        $getBrokenPhonesFromSql . 
-        $getBrokenPhonesWhereSqlArray['statement'];
-     
-    $dao = CRM_Core_DAO::executeQuery(
-      $queryString, 
-      $getBrokenPhonesWhereSqlArray['params']);
-       
-    $returnValues = array();
+    $selectedRegexRules = CRM_Phonenumbervalidator_Utils::getSelectedRegexRules($selectedRegexRuleIds);
+  
+    $invalidNumberRetriever = new CRM_Phonenumbervalidator_InvalidNumberRetriever($selectedRegexRules, $selectedSubstitutionRuleIds, $selectedContactTypeId, $selectedPhoneTypeId);
     
-    $dao->fetch();
-    $returnValues['count'] = $dao->count;
+    $returnValues = $invalidNumberRetriever->getInvalidPhoneNumbersCount();
     
     return civicrm_api3_create_success($returnValues, $params, 'PhoneNumberValidator', 'Getinvalidphonescount');
   }

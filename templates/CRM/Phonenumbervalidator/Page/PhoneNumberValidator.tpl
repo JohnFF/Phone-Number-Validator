@@ -20,7 +20,7 @@ from
 
 <h4>Use rules</h4>
 {foreach from=$regex_rules key=validityRuleSetKey item=validityRuleSet}
-    <div style="padding-right: 10px; padding-left: 10px; display: inline-block; vertical-align: text-top;">
+    <div class="regex_rule">
     {foreach from=$validityRuleSet key=validityRuleIndex item=validityRule}
         <input type="checkbox" class="regexSelector" value="{$validityRuleSetKey}_{$validityRuleIndex}" id="regex_id_{$validityRuleSetKey}_{$validityRuleIndex}">
         <label for="regex_id_{$validityRuleSetKey}_{$validityRuleIndex}" title="Regex: {$validityRule.regex}">{$validityRule.label}</label>
@@ -36,7 +36,7 @@ Countries remaining: Spain, Germany, Poland, North America, Ireland, Norway, Swi
 <h4>Options</h4>
 {foreach from=$allow_options key=rule item=label}
     <!-- {$label} -->
-    <span style="padding-right: 0px; padding-left: 10px;">
+    <span class="allow_options">
         <input type="checkbox" class="allowSelector" value="{$rule}" id="allow_{$rule}_checkbox">
         <label for="allow_{$rule}_checkbox">{$label}</label>
     </span>
@@ -46,8 +46,8 @@ Countries remaining: Spain, Germany, Poland, North America, Ireland, Norway, Swi
 
 <button type="button" id="getInvalidPhones" disabled>Get invalid phone numbers.</button>
 
-<div id='invalidPhonesCountDisplay' style='padding-top: 10px'></div>
-<div id='invalidPhonesDisplay' style='padding-top: 10px'>
+<div id='invalidPhonesCountDisplay'></div>
+<div id='invalidPhonesDisplay'>
 </div>
 <br/>
 
@@ -55,12 +55,13 @@ Countries remaining: Spain, Germany, Poland, North America, Ireland, Norway, Swi
 {crmScript ext=com.civifirst.phonenumbervalidator file=templates/CRM/Phonenumbervalidator/Page/PhoneNumberValidator.js}
 
 3. Add dozens more<br/>
-4. When no rules found, display error.<br/>
+4. When no rules found, display error - google for CiviCRM error display. There must be something!<br/>
 7. CSS<br/>
 8. Install on 4.6<br/>
 9. Install on 4.2<br/>
 10. Pass on TODOs<br/>
 11. Review each page<br/>
+12. Save selected options<br/>
 
 <br/><br/><em>Think you've found a problem, or want another country to be added to the list? Log an issue <a href="https://github.com/JohnFF/Phone-Number-Validator">here</a>.</em>
 <br/><em>Follow CiviFirst on twitter!</em>
