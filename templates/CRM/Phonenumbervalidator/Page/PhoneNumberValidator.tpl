@@ -29,7 +29,7 @@ from
     </div>
 {/foreach}
 
-Countries remaining: Spain, Germany, Poland, North America, Ireland, Norway, Switzerland, Denmark, Netherlands.
+<br/>Countries remaining: Germany, North America, Norway, Switzerland, Denmark, Netherlands.
 
 <br/><br/>
 
@@ -53,10 +53,9 @@ Countries remaining: Spain, Germany, Poland, North America, Ireland, Norway, Swi
 
 <script type="text/javascript"> var resource_base = '{$config->resourceBase}' </script>
 {crmScript ext=com.civifirst.phonenumbervalidator file=templates/CRM/Phonenumbervalidator/Page/PhoneNumberValidator.js}
+{crmStyle ext=com.civifirst.phonenumbervalidator file=templates/CRM/Phonenumbervalidator/Page/PhoneNumberValidator.css}
 
 3. Add dozens more<br/>
-4. When no rules found, display error - google for CiviCRM error display. There must be something!<br/>
-7. CSS<br/>
 8. Install on 4.6<br/>
 9. Install on 4.2<br/>
 10. Pass on TODOs<br/>

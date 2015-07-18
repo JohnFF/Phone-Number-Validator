@@ -1,12 +1,12 @@
 .regex_rule {
-  padding-right: 10px; 
-  padding-left: 10px; 
-  display: inline-block; 
+  padding-right: 10px;
+  padding-left: 10px;
+  display: inline-block;
   vertical-align: text-top;
 }
 
 .allow_options {
-  padding-right: 0px; 
+  padding-right: 0px;
   padding-left: 10px;
 }
 
@@ -15,5 +15,5 @@
 }
 
 #invalidPhonesCountDisplay {
-  style='padding-top: 10px';
+  padding-top: 10px;
 }

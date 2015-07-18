@@ -1,7 +1,5 @@
 <?php
 
-CONST RETURN_LIMIT = 50; 
-
 /**
  * PhoneNumberValidator.Getinvalidphones API specification (optional)
  * This is used for documentation and validation.
@@ -30,19 +28,19 @@ function civicrm_api3_phone_number_validator_getinvalidphones($params) {
   $selectedRegexRuleIds = $params['selectedRegexIds'];
   $selectedSubstitutionRuleIds = $params['selectedAllowCharactersIds'];
   
-  try {
-    $selectedRegexRules = CRM_Phonenumbervalidator_Utils::getSelectedRegexRules($selectedRegexRuleIds);
+  $selectedRegexRules = CRM_Phonenumbervalidator_Utils::getSelectedRegexRules($selectedRegexRuleIds);
   
-    $invalidNumberRetriever = new CRM_Phonenumbervalidator_InvalidNumberRetriever($selectedRegexRules, $selectedSubstitutionRuleIds, $selectedContactTypeId, $selectedPhoneTypeId);
+  $invalidNumberRetriever = new CRM_Phonenumbervalidator_InvalidNumberRetriever($selectedRegexRules, $selectedSubstitutionRuleIds, $selectedContactTypeId, $selectedPhoneTypeId);
     
+  try {
     $returnValues = $invalidNumberRetriever->getInvalidPhoneNumbers();
     
-    return civicrm_api3_create_success($returnValues, $params, 'PhoneNumberValidator', 'Getinvalidphonesnew');
+    return civicrm_api3_create_success($returnValues, $params, 'PhoneNumberValidator', 'Getinvalidphones');
   }
   catch (Exception $e){
-    return civicrm_api3_create_error($e->getMessage());
+    return civicrm_api3_create_error($e->getMessage() . $invalidNumberRetriever->getErrorDetails());
   }
   
-  return civicrm_api3_create_success($returnValues, $params, 'PhoneNumberValidator', 'Getinvalidphonesnew');
+  return civicrm_api3_create_success($returnValues, $params, 'PhoneNumberValidator', 'Getinvalidphones');
 }
 

@@ -29,14 +29,16 @@ class CRM_Phonenumbervalidator_UtilsTest extends PHPUnit_Framework_TestCase {
 
     $expectedValues = array(
       'Australia' => array(
-        array('label' => 'Australia Landline',               'regex' => '^0[^4][0-9]{8}$'),
-        array('label' => 'Australia Mobile',                 'regex' => '^04[0-9]{8}$')
+        array('label' => 'Australia Landline (local)',         'regex' => '^0[^4][0-9]{8}$'),
+        array('label' => 'Australia Mobile (local)',           'regex' => '^04[0-9]{8}$'),
+        array('label' => 'Australia Landline (international)', 'regex' => '^0061[^4][0-9]{8}$'),
+        array('label' => 'Australia Mobile (international)',   'regex' => '^00614[0-9]{8}$'),
       ),
       'Britain' => array(
         array('label' => 'Britain Landline (local)',         'regex' => '^0[^7][0-9]{9}$'),
         array('label' => 'Britain Mobile (local)',           'regex' => '^07[0-9]{9}$'),
         array('label' => 'Britain Landline (international)', 'regex' => '^0044[^7][0-9]{9}$'),
-        array('label' => 'Britain Mobile (international)',   'regex' => '^00447[0-9]{9}$')
+        array('label' => 'Britain Mobile (international)',   'regex' => '^00447[0-9]{9}$'),
       ),
       'France' => array(
         array('label' => 'France Landline (local)',          'regex' => '^0[1|2|3|4|5|8|9][0-9]{8}$'), // 10 digits with 0 instead of 0033 (followed by non zero what is OR in regex?
@@ -44,13 +46,29 @@ class CRM_Phonenumbervalidator_UtilsTest extends PHPUnit_Framework_TestCase {
         array('label' => 'France Landline (international)',  'regex' => '^0033[1|2|3|4|5|8|9][0-9]{8}$'), // cannot have 00 as 10 digit var
         array('label' => 'France Mobile (international)',    'regex' => '^0033[6|7][0-9]{8}$'),
       ),
+      'Ireland' => array(
+        array('label' => 'Ireland Number (local)',          'regex' => '^1[0-9]{7}$'), // TODO can we include mobile v landline distinction?
+        array('label' => 'Ireland Number (international)',  'regex' => '^00353[0-9]{7}$'),
+      ),
+      'Poland' => array(
+        array('label' => 'Poland Landline (local)',          'regex' => '^[^{5|6|7|8}][0-9]{8}$'), // 9 digits.
+        array('label' => 'Poland Mobile (local)',            'regex' => '^{5|6|7|8}[0-9]{8}$'), //  5, 6, 7 or 8 as lead indicate mobile
+        array('label' => 'Poland Landline (international)',  'regex' => '^0048[^{5|6|7|8}][0-9]{8}$'),
+        array('label' => 'Poland Mobile (international)',    'regex' => '^0048{5|6|7|8}[0-9]{8}$'),
+      ),
+      'Spain' => array(
+        array('label' => 'Spain Landline (local)',          'regex' => '^9[^{6|7}][0-9]{8}$'), // 10 digits with not 6 or 7 as the second digit
+        array('label' => 'Spain Mobile (local)',            'regex' => '^9[6|7][0-9]{8}$'),
+        array('label' => 'Spain Landline (international)',  'regex' => '^00349[^{6|7}][0-9]{8}$'),
+        array('label' => 'Spain Mobile (international)',    'regex' => '^00349[6|7][0-9]{8}$'),
+      ),
     );
 
     $actualValues = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'regex_rules');
 
     $this->assertEquals($expectedValues, $actualValues, "Found " . print_r($actualValues, TRUE));
   }
-  
+
   /**
    * Test the regex rules. To keep it a pure test, this assumes all the character substitution has already been done.
    * TODO refactor to be more generic.
@@ -67,27 +85,27 @@ class CRM_Phonenumbervalidator_UtilsTest extends PHPUnit_Framework_TestCase {
     $britishRegexRules = $regexRules['Britain'];
 
     foreach ($invalidBritishNumbers as $invalidBritishNumber) {
-      foreach ($britishRegexRules as $britishRegexRule) { 
-        $this->assertEquals(0, preg_match('/' . $britishRegexRule['regex'] . '/', $invalidBritishNumber)); 
+      foreach ($britishRegexRules as $britishRegexRule) {
+        $this->assertEquals(0, preg_match('/' . $britishRegexRule['regex'] . '/', $invalidBritishNumber));
       }
     }
   }
-  
+
   function testGetRegexRule(){
-    $regexRuleSets = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'regex_rules');  
-    
+    $regexRuleSets = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'regex_rules');
+
     $this->assertEquals('^0[^7][0-9]{9}$', CRM_Phonenumbervalidator_Utils::getRegexRule($regexRuleSets, 'Britain_0'));
-    
+
     $this->setExpectedException(
       'Exception', 'Phone Number Validator getRegexRule: Id does not exist for country Britain - see log error.'
     );
     CRM_Phonenumbervalidator_Utils::getRegexRule($regexRuleSets, 'Britain_invalidid');
-    
+
     $this->setExpectedException(
       'Exception', 'Phone Number Validator getRegexRule: Country does not exist - see log error.'
     );
     CRM_Phonenumbervalidator_Utils::getRegexRule($regexRuleSets, 'invalid_id');
-    
+
     $this->setExpectedException(
       'Exception', 'Phone Number Validator getRegexRule: Incorrect number of underscores found.'
     );

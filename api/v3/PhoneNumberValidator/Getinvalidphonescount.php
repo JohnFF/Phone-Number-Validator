@@ -10,9 +10,6 @@
  */
 function _civicrm_api3_phone_number_validator_getinvalidphonescount_spec(&$spec) {
   $spec['selectedRegexIds']['api.required'] = 1;
-  // TODO make below variables allowable
-  // $spec['selectedPhoneTypeId']['api.required'] = 1; 
-  // $spec['selectedContactTypeId']['api.required'] = 1;
 }
 
 /**
@@ -31,22 +28,17 @@ function civicrm_api3_phone_number_validator_getinvalidphonescount($params) {
   $selectedRegexRuleIds = $params['selectedRegexIds'];
   $selectedSubstitutionRuleIds = $params['selectedAllowCharactersIds'];
   
-  try {
-    $selectedRegexRules = CRM_Phonenumbervalidator_Utils::getSelectedRegexRules($selectedRegexRuleIds);
+  $selectedRegexRules = CRM_Phonenumbervalidator_Utils::getSelectedRegexRules($selectedRegexRuleIds);
   
-    $invalidNumberRetriever = new CRM_Phonenumbervalidator_InvalidNumberRetriever($selectedRegexRules, $selectedSubstitutionRuleIds, $selectedContactTypeId, $selectedPhoneTypeId);
+  $invalidNumberRetriever = new CRM_Phonenumbervalidator_InvalidNumberRetriever($selectedRegexRules, $selectedSubstitutionRuleIds, $selectedContactTypeId, $selectedPhoneTypeId);
     
+  try {
     $returnValues = $invalidNumberRetriever->getInvalidPhoneNumbersCount();
     
     return civicrm_api3_create_success($returnValues, $params, 'PhoneNumberValidator', 'Getinvalidphonescount');
   }
   catch (Exception $e){
-    return civicrm_api3_create_error(
-      $e->getMessage() . " with sql " . 
-      $getBrokenPhonesSelectSql . 
-      $getBrokenPhonesFromSql . 
-      $getBrokenPhonesWhereSqlArray['statement']
-    );
+    return civicrm_api3_create_error($e->getMessage() . $invalidNumberRetriever->getErrorDetails());
   }
   
   return civicrm_api3_create_success($returnValues, $params, 'PhoneNumberValidator', 'Getinvalidphonescount');
