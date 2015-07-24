@@ -29,7 +29,7 @@ from
     </div>
 {/foreach}
 
-<br/>Countries remaining: Germany, North America, Norway, Switzerland, Denmark, Netherlands.
+<br/>Countries remaining: Germany, North America.
 
 <br/><br/>
 
@@ -44,7 +44,7 @@ from
 
 <br/><br/>
 
-<button type="button" id="getInvalidPhones" disabled>Get invalid phone numbers.</button>
+<button type="button" id="getInvalidPhones" disabled title="Use the rules that you've selected to find invalid numbers. If this is greyed out then select some rules.">Find invalid phone numbers.</button>
 
 <div id='invalidPhonesCountDisplay'></div>
 <div id='invalidPhonesDisplay'>
@@ -60,7 +60,6 @@ from
 9. Install on 4.2<br/>
 10. Pass on TODOs<br/>
 11. Review each page<br/>
-12. Save selected options<br/>
 
 <br/><br/><em>Think you've found a problem, or want another country to be added to the list? Log an issue <a href="https://github.com/JohnFF/Phone-Number-Validator">here</a>.</em>
 <br/><em>Follow CiviFirst on twitter!</em>

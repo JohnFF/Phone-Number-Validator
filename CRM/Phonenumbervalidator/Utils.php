@@ -9,38 +9,56 @@ class CRM_Phonenumbervalidator_Utils {
     // Add valid phone matching regexes. This structure allows each to have its own id and name, but be grouped together in the interface.
     $aValidPhonesRegexes = array(
       'Australia' => array(
-        array('label' => 'Australia Landline (local)',         'regex' => '^0[^4][0-9]{8}$'),
-        array('label' => 'Australia Mobile (local)',           'regex' => '^04[0-9]{8}$'),
-        array('label' => 'Australia Landline (international)', 'regex' => '^0061[^4][0-9]{8}$'),
-        array('label' => 'Australia Mobile (international)',   'regex' => '^00614[0-9]{8}$'),
+        array('label' => 'Australian landlines (local)',         'regex' => '^0[^4][0-9]{8}$'),
+        array('label' => 'Australian mobiles (local)',           'regex' => '^04[0-9]{8}$'),
+        array('label' => 'Australian landlines (international)', 'regex' => '^0061[^4][0-9]{8}$'),
+        array('label' => 'Australian mobiles (international)',   'regex' => '^00614[0-9]{8}$'),
       ),
       'Britain' => array(
-        array('label' => 'Britain Landline (local)',         'regex' => '^0[^7][0-9]{9}$'),
-        array('label' => 'Britain Mobile (local)',           'regex' => '^07[0-9]{9}$'),
-        array('label' => 'Britain Landline (international)', 'regex' => '^0044[^7][0-9]{9}$'),
-        array('label' => 'Britain Mobile (international)',   'regex' => '^00447[0-9]{9}$'),
+        array('label' => 'British landlines (local)',            'regex' => '^0[^7][0-9]{9}$'),
+        array('label' => 'British mobiles (local)',              'regex' => '^07[0-9]{9}$'),
+        array('label' => 'British landlines (international)',    'regex' => '^0044[^7][0-9]{9}$'),
+        array('label' => 'British mobiles (international)',      'regex' => '^00447[0-9]{9}$'),
+      ),
+      'Denmark' => array(
+        array('label' => 'Danish phones (local)',                'regex' => '^[0-9]{8}$'),
+        array('label' => 'Danish phones (international)',        'regex' => '^0045[0-9]{8}$'),
       ),
       'France' => array(
-        array('label' => 'France Landline (local)',          'regex' => '^0[1|2|3|4|5|8|9][0-9]{8}$'), // 10 digits with 0 instead of 0033 (followed by non zero what is OR in regex?
-        array('label' => 'France Mobile (local)',            'regex' => '^0[6|7][0-9]{8}$'), // 06 and 07 are mobile services
-        array('label' => 'France Landline (international)',  'regex' => '^0033[1|2|3|4|5|8|9][0-9]{8}$'), // cannot have 00 as 10 digit var
-        array('label' => 'France Mobile (international)',    'regex' => '^0033[6|7][0-9]{8}$'),
+        array('label' => 'French landlines (local)',             'regex' => '^0[1|2|3|4|5|8|9][0-9]{8}$'), // 10 digits with 0 instead of 0033 (followed by non zero what is OR in regex?
+        array('label' => 'French mobiles (local)',               'regex' => '^0[6|7][0-9]{8}$'), // 06 and 07 are mobiles services
+        array('label' => 'French landlines (international)',     'regex' => '^0033[1|2|3|4|5|8|9][0-9]{8}$'), // cannot have 00 as 10 digit var
+        array('label' => 'French mobiles (international)',       'regex' => '^0033[6|7][0-9]{8}$'),
       ),
       'Ireland' => array(
-        array('label' => 'Ireland Number (local)',          'regex' => '^1[0-9]{7}$'), // TODO can we include mobile v landline distinction?
-        array('label' => 'Ireland Number (international)',  'regex' => '^00353[0-9]{7}$'),
+        array('label' => 'Irish phones (local)',                 'regex' => '^1[0-9]{7}$'), // TODO can we include mobiles v landlines distinction?
+        array('label' => 'Irish phones (international)',         'regex' => '^00353[0-9]{7}$'),
+      ),
+      'The Netherlands' => array(
+        array('label' => 'Dutch phones (local)',                 'regex' => '^[0-9]{9}$'), // TODO can we include mobiles v landlines distinction?
+        array('label' => 'Dutch phones (international)',         'regex' => '^0031[0-9]{9}$'),
+      ),
+      'Norway' => array(
+        array('label' => 'Norwegian landlines (local)',          'regex' => '^[^4|9][0-9]{7}$'),
+        array('label' => 'Norwegian mobiles (local)',            'regex' => '^[4|9][0-9]{7}$'),
+        array('label' => 'Norwegian landlines (international)',  'regex' => '^0047[^4|9][0-9]{7}$'),
+        array('label' => 'Norwegian mobiles (international)',    'regex' => '^0047[4|9][0-9]{7}$'),
       ),
       'Poland' => array(
-        array('label' => 'Poland Landline (local)',          'regex' => '^[^{5|6|7|8}][0-9]{8}$'), // 9 digits.
-        array('label' => 'Poland Mobile (local)',            'regex' => '^{5|6|7|8}[0-9]{8}$'), //  5, 6, 7 or 8 as lead indicate mobile
-        array('label' => 'Poland Landline (international)',  'regex' => '^0048[^{5|6|7|8}][0-9]{8}$'),
-        array('label' => 'Poland Mobile (international)',    'regex' => '^0048{5|6|7|8}[0-9]{8}$'),
+        array('label' => 'Polish landlines (local)',             'regex' => '^[^{5|6|7|8}][0-9]{8}$'), // 9 digits.
+        array('label' => 'Polish mobiles (local)',               'regex' => '^{5|6|7|8}[0-9]{8}$'), //  5, 6, 7 or 8 as lead indicate mobile
+        array('label' => 'Polish landlines (international)',     'regex' => '^0048[^{5|6|7|8}][0-9]{8}$'),
+        array('label' => 'Polish mobiles (international)',       'regex' => '^0048{5|6|7|8}[0-9]{8}$'),
       ),
       'Spain' => array(
-        array('label' => 'Spain Landline (local)',          'regex' => '^9[^{6|7}][0-9]{8}$'), // 10 digits with not 6 or 7 as the second digit
-        array('label' => 'Spain Mobile (local)',            'regex' => '^9[6|7][0-9]{8}$'),
-        array('label' => 'Spain Landline (international)',  'regex' => '^00349[^{6|7}][0-9]{8}$'),
-        array('label' => 'Spain Mobile (international)',    'regex' => '^00349[6|7][0-9]{8}$'),
+        array('label' => 'Spanish landlines (local)',            'regex' => '^9[^{6|7}][0-9]{8}$'), // 10 digits with not 6 or 7 as the second digit
+        array('label' => 'Spanish mobiles (local)',              'regex' => '^9[6|7][0-9]{8}$'),
+        array('label' => 'Spanish landlines (international)',    'regex' => '^00349[^{6|7}][0-9]{8}$'),
+        array('label' => 'Spanish mobiles (international)',      'regex' => '^00349[6|7][0-9]{8}$'),
+      ),
+      'Switzerland' => array(
+        array('label' => 'Swiss phones (local)',                 'regex' => '^0[0-9]{9}$'),
+        array('label' => 'Swiss phones (international)',         'regex' => '^0041[0-9]{9}$'),
       ),
     );
 
@@ -84,40 +102,50 @@ class CRM_Phonenumbervalidator_Utils {
   /*
    * Removes all settings from civicrm DB added by the phonenumbervalidator.
    */
-  public static function deleteDbSettings () {
+  public static function deleteDbSettings() {
     $deleteMysql = 'DELETE FROM civicrm_setting WHERE group_name = "com.civifirst.phonenumbervalidator"';
     CRM_Core_DAO::executeQuery($deleteMysql);
   }
 
-
-
-  /* TODO */
-  public static function getRegexRule($regexRuleSets, $ruleId){
-    // TODO check that $ruleId has one _ or assert
+  /* 
+   * For a given rule id returns the raw regex rule.
+   * @param array $regexRuleSets
+   * @param string $ruleId
+   * @return string regex
+   */
+  private static function getRegexRule($regexRuleSets, $ruleId){
     if (substr_count($ruleId, '_') != 1){
-      throw new exception("Phone Number Validator getRegexRule: Incorrect number of underscores found." . $ruleId); // TODO write to error log
+      $errorMessage = "Phone Number Validator getRegexRule: Incorrect number of underscores found." . $ruleId;
+      CRM_Core_Error::debug($errorMessage);
+      throw new exception($errorMessage);
     }
 
     $ruleIdArrayRaw = explode("_", $ruleId);
     $ruleIdArray = array('country' => $ruleIdArrayRaw[0], 'id' => $ruleIdArrayRaw[1]);
 
-    // TODO use better error types.
-
     if (!array_key_exists($ruleIdArray['country'], $regexRuleSets)) {
-      throw new exception("Phone Number Validator getRegexRule: Country does not exist - see log error."); // TODO write to error log
+      $errorMessage = "Phone Number Validator getRegexRule: Country does not exist - see log error.";
+      CRM_Core_Error::debug($errorMessage);
+      throw new exception($errorMessage);
     }
 
     $country = $ruleIdArray['country'];
 
     if (!array_key_exists($ruleIdArray['id'], $regexRuleSets[$ruleIdArray['country']])){
-      throw new exception("Phone Number Validator getRegexRule: Id does not exist for country " . $ruleIdArray['country'] . " - see log error."); // TODO write to error log
+      $errorMessage = "Phone Number Validator getRegexRule: Id does not exist for country " . $ruleIdArray['country'] . " - see log error.";
+      CRM_Core_Error::debug($errorMessage);
+      throw new exception($errorMessage);
     }
     $id = $ruleIdArray['id'];
 
     return $regexRuleSets[$country][$id]['regex'];
   }
 
-  /* TODO */
+  /* 
+   * For a given list of ids, return the associated rules.
+   * @param array $selectedRegexRuleIds
+   * @return array of regexes
+   */
   public static function getSelectedRegexRules(array $selectedRegexRuleIds){
     $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'regex_rules');
     $selectedRegexRules = array();

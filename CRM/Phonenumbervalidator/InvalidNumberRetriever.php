@@ -138,15 +138,15 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
 
     $charactersToAllowArray = array();
 
-    if (in_array('hyphens', $selectedAllowCharactersArray)) {
+    if (in_array('hyphens', $selectedAllowCharactersArray)){
       $charactersToAllowArray[] = '-';
     }
 
-    if (in_array('fullstops', $selectedAllowCharactersArray)) {
+    if (in_array('fullstops', $selectedAllowCharactersArray)){
       $charactersToAllowArray[] = '.';
     }
 
-    if (in_array('brackets', $selectedAllowCharactersArray)) {
+    if (in_array('brackets', $selectedAllowCharactersArray)){
       $charactersToAllowArray[] = '(';
       $charactersToAllowArray[] = ')';
     }
@@ -155,7 +155,7 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
       $charactersToAllowArray[] = ' ';
     }
 
-    foreach ($charactersToAllowArray as $characterToAllow) {
+    foreach ($charactersToAllowArray as $characterToAllow){
       $mysqlPhoneString = "REPLACE($mysqlPhoneString, '$characterToAllow', '')";
     }
 
@@ -188,7 +188,10 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
       $getContactTypesResults = civicrm_api('ContactType', 'getsingle', $getContactTypesParams);
 
       if (civicrm_error($getContactTypesResults)){
-        // TODO
+        $errorMessage = "Phone Number Validator buildWhereStatementMysqlString: couldn't retrieve contact types. Input : " . 
+          print_r($getContactTypesParams, TRUE) . " Output: " . print_r($getContactTypesResults, TRUE) ;
+        CRM_Core_Error::debug($errorMessage);
+        throw new exception($errorMessage);
       }
 
       // If the contact type has a parent id then it is a contact sub type.
