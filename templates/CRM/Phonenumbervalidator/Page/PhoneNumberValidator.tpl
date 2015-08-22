@@ -29,8 +29,6 @@ from
     </div>
 {/foreach}
 
-<br/>Countries remaining: Germany, North America.
-
 <br/><br/>
 
 <h4>Options</h4>

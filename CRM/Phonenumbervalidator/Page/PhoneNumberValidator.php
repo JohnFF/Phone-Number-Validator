@@ -1,4 +1,7 @@
 <?php
+/**
+ * This class builds the interface page.
+ */
 
 require_once 'CRM/Core/Page.php';
 

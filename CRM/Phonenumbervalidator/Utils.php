@@ -1,13 +1,11 @@
 <?php
-
+/**
+ * This class contains the install, uninstall, and other utility functions.
+ */
 class CRM_Phonenumbervalidator_Utils {
 
-  /*
-   * Install the valid phone number regexes.
-   */
-  public static function installPhoneNumberRegexes(){
-    // Add valid phone matching regexes. This structure allows each to have its own id and name, but be grouped together in the interface.
-    $aValidPhonesRegexes = array(
+  public static function getPhoneNumberRegexes(){
+    return array(
       'Australia' => array(
         array('label' => 'Australian landlines (local)',         'regex' => '^0[^4][0-9]{8}$'),
         array('label' => 'Australian mobiles (local)',           'regex' => '^04[0-9]{8}$'),
@@ -44,16 +42,21 @@ class CRM_Phonenumbervalidator_Utils {
         array('label' => 'Norwegian landlines (international)',  'regex' => '^0047[^4|9][0-9]{7}$'),
         array('label' => 'Norwegian mobiles (international)',    'regex' => '^0047[4|9][0-9]{7}$'),
       ),
+      'North America' => array(
+        // NXX-NXX-XXXX Where N is any digit 2-9 and X is any digit 0-9
+        array('label' => 'North American incl. Canada (local)',               'regex' => '^[2-9][0-9]{2}[2-9][0-9]{6}$'),
+        array('label' => 'Norwegian landlines incl. Canada (international)',  'regex' => '^001[2-9][0-9]{2}[2-9][0-9]{6}$'),
+      ),        
       'Poland' => array(
-        array('label' => 'Polish landlines (local)',             'regex' => '^[^{5|6|7|8}][0-9]{8}$'), // 9 digits.
-        array('label' => 'Polish mobiles (local)',               'regex' => '^{5|6|7|8}[0-9]{8}$'), //  5, 6, 7 or 8 as lead indicate mobile
-        array('label' => 'Polish landlines (international)',     'regex' => '^0048[^{5|6|7|8}][0-9]{8}$'),
-        array('label' => 'Polish mobiles (international)',       'regex' => '^0048{5|6|7|8}[0-9]{8}$'),
+        array('label' => 'Polish landlines (local)',             'regex' => '^[5|6|7|8][0-9]{8}$'), // 9 digits.
+        array('label' => 'Polish mobiles (local)',               'regex' => '^[5|6|7|8][0-9]{8}$'), //  5, 6, 7 or 8 as lead indicate mobile
+        array('label' => 'Polish landlines (international)',     'regex' => '^0048[5|6|7|8][0-9]{8}$'),
+        array('label' => 'Polish mobiles (international)',       'regex' => '^0048[5|6|7|8][0-9]{8}$'),
       ),
       'Spain' => array(
-        array('label' => 'Spanish landlines (local)',            'regex' => '^9[^{6|7}][0-9]{8}$'), // 10 digits with not 6 or 7 as the second digit
+        array('label' => 'Spanish landlines (local)',            'regex' => '^9[6|7][0-9]{8}$'), // 10 digits with not 6 or 7 as the second digit
         array('label' => 'Spanish mobiles (local)',              'regex' => '^9[6|7][0-9]{8}$'),
-        array('label' => 'Spanish landlines (international)',    'regex' => '^00349[^{6|7}][0-9]{8}$'),
+        array('label' => 'Spanish landlines (international)',    'regex' => '^00349[6|7][0-9]{8}$'),
         array('label' => 'Spanish mobiles (international)',      'regex' => '^00349[6|7][0-9]{8}$'),
       ),
       'Switzerland' => array(
@@ -61,6 +64,14 @@ class CRM_Phonenumbervalidator_Utils {
         array('label' => 'Swiss phones (international)',         'regex' => '^0041[0-9]{9}$'),
       ),
     );
+  }  
+    
+  /*
+   * Install the valid phone number regexes.
+   */
+  public static function installPhoneNumberRegexes(){
+    // Add valid phone matching regexes. This structure allows each to have its own id and name, but be grouped together in the interface.
+    $aValidPhonesRegexes = self::getPhoneNumberRegexes();
 
     CRM_Core_BAO_Setting::setItem($aValidPhonesRegexes, 'com.civifirst.phonenumbervalidator',
         'regex_rules');
@@ -113,7 +124,7 @@ class CRM_Phonenumbervalidator_Utils {
    * @param string $ruleId
    * @return string regex
    */
-  private static function getRegexRule($regexRuleSets, $ruleId){
+  public static function getRegexRule($regexRuleSets, $ruleId){
     if (substr_count($ruleId, '_') != 1){
       $errorMessage = "Phone Number Validator getRegexRule: Incorrect number of underscores found." . $ruleId;
       CRM_Core_Error::debug($errorMessage);

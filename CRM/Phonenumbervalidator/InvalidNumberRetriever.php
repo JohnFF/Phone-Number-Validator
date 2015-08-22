@@ -3,8 +3,6 @@
 /**
  * This object retrieves invalid numbers phone numbers from the DAO object it is
  * passed, according to the rules that it is created with.
- *
- * @author john
  */
 class CRM_Phonenumbervalidator_InvalidNumberRetriever {
 

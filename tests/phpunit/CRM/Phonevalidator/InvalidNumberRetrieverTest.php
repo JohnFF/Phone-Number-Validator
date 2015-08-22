@@ -2,7 +2,6 @@
 
 ini_set('include_path', '/var/www/html/prod/drupal');
 require_once '/var/www/html/prod/drupal/sites/all/modules/civicrm/civicrm.config.php';
-require_once 'CRM/Core/Config.php';
 CRM_Core_Config::singleton();
 
 /**
@@ -55,28 +54,6 @@ class CRM_Phonenumbervalidator_InvalidNumberRetrieverTest extends PHPUnit_Framew
     }
 
     /**
-     * @covers InvalidNumberRetriever::buildFromStatementMyqlString
-     * @todo   Implement testBuildFromStatementMyqlString().
-     */
-    public function testBuildFromStatementMyqlString() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers InvalidNumberRetriever::buildReplacementMysqlString
-     * @todo   Implement testBuildReplacementMysqlString().
-     */
-    public function testBuildReplacementMysqlString() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * @covers InvalidNumberRetriever::buildWhereStatementMysqlString
      * @todo   Implement testBuildWhereStatementMysqlString().
      */
@@ -102,13 +79,13 @@ class CRM_Phonenumbervalidator_InvalidNumberRetrieverTest extends PHPUnit_Framew
     // Test hyphens and brackets.
     $selectedAllowCharactersArray = array('hyphens', 'brackets');
     $expectedOutput = "REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '')";
-    $output = CRM_Phonenumbervalidator_Utils::buildReplacementMysqlString($selectedAllowCharactersArray);
+    $output = CRM_Phonenumbervalidator_InvalidNumberRetriever::buildReplacementMysqlString($selectedAllowCharactersArray);
     $this->assertEquals($expectedOutput, $output, "Found " . print_r($output, TRUE));
 
     // Test no ignore characts.
     $selectedIgnoreCharactersArray = array();
     $expectedOutput = "phone";
-    $output = CRM_Phonenumbervalidator_Utils::buildReplacementMysqlString($selectedIgnoreCharactersArray);
+    $output = CRM_Phonenumbervalidator_InvalidNumberRetriever::buildReplacementMysqlString($selectedIgnoreCharactersArray);
     $this->assertEquals($expectedOutput, $output, "Found " . print_r($output, TRUE));
   }
 
@@ -116,13 +93,14 @@ class CRM_Phonenumbervalidator_InvalidNumberRetrieverTest extends PHPUnit_Framew
     $selectedRegexRuleIds = array('Britain_0', 'Britain_1', 'Britain_2', 'Britain_3');
     $selectedAllowCharacterRules = array('hyphens', 'brackets');
 
-    $expectedOutput = "FROM (SELECT id, phone, phone_ext, phone_type_id, contact_id FROM civicrm_phone WHERE "
-            . "(REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '') NOT REGEXP '^0[^7][0-9]{9}$') AND "
-            . "(REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '') NOT REGEXP '^07[0-9]{9}$') AND "
-            . "(REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '') NOT REGEXP '^0044[^7][0-9]{9}$') AND "
-            . "(REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '') NOT REGEXP '^00447[0-9]{9}$')) "
+    $expectedOutput = "FROM (SELECT id, phone, phone_ext, phone_type_id, contact_id FROM civicrm_phone "
+            . "WHERE (REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '') NOT REGEXP 'Britain_0') AND "
+            . "(REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '') NOT REGEXP 'Britain_1') AND "
+            . "(REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '') NOT REGEXP 'Britain_2') AND "
+            . "(REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '') NOT REGEXP 'Britain_3')) "
             . "AS phone JOIN civicrm_contact AS contact ON phone.contact_id = contact.id ";
-    $output = CRM_Phonenumbervalidator_Utils::buildFromStatementMyqlString($selectedRegexRuleIds, $selectedAllowCharacterRules);
+
+    $output = CRM_Phonenumbervalidator_InvalidNumberRetriever::buildFromStatementMyqlString($selectedRegexRuleIds, $selectedAllowCharacterRules);
 
     $this->assertEquals($expectedOutput, $output, "Found " . print_r($output, TRUE));
   }
@@ -138,13 +116,13 @@ class CRM_Phonenumbervalidator_InvalidNumberRetrieverTest extends PHPUnit_Framew
       array(
         'contactTypeId' => '',
         'phoneTypeId' => '1',
-        'expectedOutputStatement' => "WHERE 1 AND phone_type_id = '%2' ",
+        'expectedStatementOutput' => "WHERE 1 AND phone_type_id = '%2' ",
         'expectedParamsOutput' => array(2 => array(0 => 1, 1 => 'Int')),
       ),
       array(
         'contactTypeId' => '1',
         'phoneTypeId' => '',
-        'expectedOutputStatement' => "WHERE 1 AND contact_type LIKE '%%1%' ",
+        'expectedStatementOutput' => "WHERE 1 AND contact_type LIKE '%%1%' ",
         'expectedParamsOutput' => array(1 => array(0 => 'Individual', 1 => 'String', 2 => 2)),
       ),
 //      array('contactTypeId' => '1000', 'phoneTypeId' => '1', 'expectedOutput' => ''),
@@ -154,7 +132,7 @@ class CRM_Phonenumbervalidator_InvalidNumberRetrieverTest extends PHPUnit_Framew
     );
 
     foreach($testData as $eachTest){
-      $actualOutput = CRM_Phonenumbervalidator_Utils::buildWhereStatementMysqlString($eachTest['contactTypeId'], $eachTest['phoneTypeId']);
+      $actualOutput = CRM_Phonenumbervalidator_InvalidNumberRetriever::buildWhereStatementMysqlString($eachTest['contactTypeId'], $eachTest['phoneTypeId']);
       $this->assertEquals($eachTest['expectedStatementOutput'], $actualOutput['statement'], "Test failed, actual output was: " . print_r($actualOutput['statement'], TRUE));
       $this->assertEquals($eachTest['expectedParamsOutput'], $actualOutput['params'], "Test failed, actual output was: " . print_r($actualOutput['params'], TRUE));
     }
