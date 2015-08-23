@@ -4,6 +4,9 @@
  */
 class CRM_Phonenumbervalidator_Utils {
 
+  /**
+   * @return array structured array of phone number regexes
+   */
   public static function getPhoneNumberRegexes(){
     return array(
       'Australia' => array(
@@ -27,6 +30,10 @@ class CRM_Phonenumbervalidator_Utils {
         array('label' => 'French mobiles (local)',               'regex' => '^0[6|7][0-9]{8}$'), // 06 and 07 are mobiles services
         array('label' => 'French landlines (international)',     'regex' => '^0033[1|2|3|4|5|8|9][0-9]{8}$'), // cannot have 00 as 10 digit var
         array('label' => 'French mobiles (international)',       'regex' => '^0033[6|7][0-9]{8}$'),
+      ),
+      'Germany' => array(
+        array('label' => 'German phones (local)',                 'regex' => '^0[0-9]{8}$'), // TODO can we include mobiles v landlines distinction?
+        array('label' => 'German phones (international)',         'regex' => '^0049[0-9]{8}$'),
       ),
       'Ireland' => array(
         array('label' => 'Irish phones (local)',                 'regex' => '^1[0-9]{7}$'), // TODO can we include mobiles v landlines distinction?
@@ -101,7 +108,7 @@ class CRM_Phonenumbervalidator_Utils {
   }
 
   /*
-   * Installs some default valid phone validation rules and other settings.
+   * Installs some default valid phone validation rules and other settings in the DB.
    */
   public static function installDefaults() {
     // Remove the settings if they are already present.

@@ -42,8 +42,35 @@ cj('.regexSelector').click(function (){
     }
 });
 
-// make table row
-function makeTableRow(contactId, display_name, phoneId, phoneNumber, phoneTypeId, phoneExt){
+// the main retrieval function
+cj('#getInvalidPhones').click(function(){
+    // Clear old table entries and add spinner.
+    cj('#invalidPhonesDisplay').empty();
+    cj('#invalidPhonesDisplay').append('<img src="' + resource_base + 'i/loading.gif">');
+    cj('#invalidPhonesCountDisplay').empty();
+
+    // Get params
+    var selectedRegexIds = [];
+    cj('input:checked.regexSelector').each(function() {
+        selectedRegexIds.push(cj(this).val());
+    });
+
+    var selectedAllowCharactersIds   = [];
+    cj('input:checked.allowSelector').each(function() {
+        selectedAllowCharactersIds.push(cj(this).val());
+    });
+
+    var selectedPhoneTypeId = cj('#selectedPhoneType').val();
+    var selectedContactTypeId = cj('#selectedContactType').val();
+
+    CRM.PhoneNumberValidator.retrieveInvalidPhoneNumbersCount(selectedRegexIds, selectedAllowCharactersIds, selectedPhoneTypeId, selectedContactTypeId);
+});
+
+var CRM = CRM || {};
+
+CRM.PhoneNumberValidator = CRM.PhoneNumberValidator || {};
+
+CRM.PhoneNumberValidator.makeTableRow = function (contactId, display_name, phoneId, phoneNumber, phoneTypeId, phoneExt){
 
     var viewContactLink = '<a title="View ' + display_name + '\'s contact record." href="/civicrm/contact/view?reset=1&cid=' + contactId + '">' + display_name + '</a>';
 
@@ -76,31 +103,7 @@ function makeTableRow(contactId, display_name, phoneId, phoneNumber, phoneTypeId
 
 }
 
-// the main retrieval function
-cj('#getInvalidPhones').click(function(){
-    // Clear old table entries and add spinner.
-    cj('#invalidPhonesDisplay').empty();
-    cj('#invalidPhonesDisplay').append('<img src="' + resource_base + 'i/loading.gif">');
-    cj('#invalidPhonesCountDisplay').empty();
-
-    // Get params
-    var selectedRegexIds = [];
-    cj('input:checked.regexSelector').each(function() {
-        selectedRegexIds.push(cj(this).val());
-    });
-
-    var selectedAllowCharactersIds   = [];
-    cj('input:checked.allowSelector').each(function() {
-        selectedAllowCharactersIds.push(cj(this).val());
-    });
-
-    var selectedPhoneTypeId = cj('#selectedPhoneType').val();
-    var selectedContactTypeId = cj('#selectedContactType').val();
-
-    retrieveInvalidPhoneNumbersCount(selectedRegexIds, selectedAllowCharactersIds, selectedPhoneTypeId, selectedContactTypeId);
-});
-
-function retrieveInvalidPhoneNumbersCount(selectedRegexIds, selectedAllowCharactersIds, selectedPhoneTypeId, selectedContactTypeId){
+CRM.PhoneNumberValidator.retrieveInvalidPhoneNumbersCount = function (selectedRegexIds, selectedAllowCharactersIds, selectedPhoneTypeId, selectedContactTypeId){
     // Get and insert the new entries.
     CRM.api('PhoneNumberValidator', 'Getinvalidphonescount', {
         'sequential': 1,
@@ -116,7 +119,7 @@ function retrieveInvalidPhoneNumbersCount(selectedRegexIds, selectedAllowCharact
                 cj('#invalidPhonesCountDisplay').append('<div>No broken phone numbers to display.</div>');
                 cj('#invalidPhonesDisplay').empty(); // remove spinner.
             } else {
-                retrieveInvalidPhoneNumbers(selectedRegexIds, selectedAllowCharactersIds, selectedPhoneTypeId, selectedContactTypeId);
+                CRM.PhoneNumberValidator.retrieveInvalidPhoneNumbers(selectedRegexIds, selectedAllowCharactersIds, selectedPhoneTypeId, selectedContactTypeId);
 
                 if (brokenPhoneNumbersCount > 50) {
                     cj('#invalidPhonesCountDisplay').append('<div>Showing first 50 of ' + brokenPhoneNumbersCount + ' broken phone numbers.</div>');
@@ -132,7 +135,7 @@ function retrieveInvalidPhoneNumbersCount(selectedRegexIds, selectedAllowCharact
     );
 }
 
-function retrieveInvalidPhoneNumbers(selectedRegexIds, selectedAllowCharactersIds, selectedPhoneTypeId, selectedContactTypeId){
+CRM.PhoneNumberValidator.retrieveInvalidPhoneNumbers = function (selectedRegexIds, selectedAllowCharactersIds, selectedPhoneTypeId, selectedContactTypeId){
     // Get and insert the new entries.
     CRM.api('PhoneNumberValidator', 'Getinvalidphones', {
         'sequential': 1,
@@ -148,7 +151,7 @@ function retrieveInvalidPhoneNumbers(selectedRegexIds, selectedAllowCharactersId
             cj('#invalidPhonesTable').append("<tr><th>contact name</th><th>phone</th><th>extension</th><th>type</th><th>actions</th></tr>");
 
             cj.each(data.values, function(key, value) {
-                cj('#invalidPhonesTable').append(makeTableRow(value['contact_id'],value['display_name'],value['phone_id'],value['phone_number'],value['phone_type_id'],value['phone_ext']));
+                cj('#invalidPhonesTable').append(CRM.PhoneNumberValidator.makeTableRow(value['contact_id'],value['display_name'],value['phone_id'],value['phone_number'],value['phone_type_id'],value['phone_ext']));
             });
             cj('#invalidPhonesDisplay').append("</table>");
             cj('.crm-editable').crmEditable();
