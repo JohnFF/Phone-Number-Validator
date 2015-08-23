@@ -52,7 +52,7 @@ class CRM_Phonenumbervalidator_Utils {
       'North America' => array(
         // NXX-NXX-XXXX Where N is any digit 2-9 and X is any digit 0-9
         array('label' => 'North American incl. Canada (local)',               'regex' => '^[2-9][0-9]{2}[2-9][0-9]{6}$'),
-        array('label' => 'Norwegian landlines incl. Canada (international)',  'regex' => '^001[2-9][0-9]{2}[2-9][0-9]{6}$'),
+        array('label' => 'North American landlines incl. Canada (international)',  'regex' => '^001[2-9][0-9]{2}[2-9][0-9]{6}$'),
       ),        
       'Poland' => array(
         array('label' => 'Polish landlines (local)',             'regex' => '^[5|6|7|8][0-9]{8}$'), // 9 digits.
