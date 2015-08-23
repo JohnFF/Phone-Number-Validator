@@ -53,11 +53,5 @@ from
 {crmScript ext=com.civifirst.phonenumbervalidator file=templates/CRM/Phonenumbervalidator/Page/PhoneNumberValidator.js}
 {crmStyle ext=com.civifirst.phonenumbervalidator file=templates/CRM/Phonenumbervalidator/Page/PhoneNumberValidator.css}
 
-3. Add dozens more<br/>
-8. Install on 4.6<br/>
-9. Install on 4.2<br/>
-10. Pass on TODOs<br/>
-11. Review each page<br/>
-
 <br/><br/><em>Think you've found a problem, or want another country to be added to the list? Log an issue <a href="https://github.com/JohnFF/Phone-Number-Validator">here</a>.</em>
 <br/><em>Follow CiviFirst on twitter!</em>
