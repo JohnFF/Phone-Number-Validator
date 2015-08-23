@@ -29,6 +29,7 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
 
   /*
    * Performs the SQL query to retrieve the broken phone numbers.
+   * @return array $invalidPhoneNumbers
    */
   public function getInvalidPhoneNumbers(){
     $getBrokenPhonesSelectSql = "SELECT contact.id AS contact_id, "
@@ -47,7 +48,7 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
       $queryString,
       $this->sqlWhereClause['params']);
 
-    $returnValues = array();
+    $invalidPhoneNumbers = array();
 
     while ($dao->fetch()){
       $rawReturnValues = array(
@@ -63,14 +64,15 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
         $rawReturnValues['phone_ext'] = '';
       }
 
-      $returnValues[] = $rawReturnValues;
+      $invalidPhoneNumbers[] = $rawReturnValues;
     }
 
-    return $returnValues;
+    return $invalidPhoneNumbers;
   }
 
   /*
    * Performs the SQL query to retrieve the number of broken phone numbers.
+   * @return array $invalidPhoneNumbersCount
    */
   public function getInvalidPhoneNumbersCount(){
     $getBrokenPhonesCountSql = "SELECT count(contact.id) AS count ";
@@ -83,12 +85,12 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
       $queryString,
       $this->sqlWhereClause['params']);
 
-    $returnValues = array();
+    $invalidPhoneNumbersCount = array();
 
     $dao->fetch();
-    $returnValues['count'] = $dao->count;
+    $invalidPhoneNumbersCount['count'] = $dao->count;
 
-    return $returnValues;
+    return $invalidPhoneNumbersCount;
   }
 
   /*
@@ -96,6 +98,7 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
    *
    * @param array $selectedRegexRules
    * @param array $selectedAllowCharacterRules
+   * @return string $getBrokenPhonesFromSql part of a MySQL query
    */
   public static function buildFromStatementMyqlString ($selectedRegexRules, $selectedAllowCharacterRules) {
     $getBrokenPhonesFromSql = "FROM ";
@@ -121,6 +124,7 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
    * Generates the sql that does string replacement ahead of the regex call.
    *
    * @param array $selectedAllowCharactersArray
+   * @return array $mysqlPhoneString part of a MySQL query
    */
   public static function buildReplacementMysqlString ($selectedAllowCharactersArray) {
 
@@ -165,6 +169,7 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
    *
    * @param int $selectedContactTypeId
    * @param int $selectedPhoneTypeId
+   * @return array containing string $getBrokenPhonesWhereSql and array $queryParameters
    */
   public static function buildWhereStatementMysqlString($selectedContactTypeId, $selectedPhoneTypeId){
 
