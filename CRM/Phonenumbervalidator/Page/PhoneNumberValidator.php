@@ -13,11 +13,11 @@ class CRM_Phonenumbervalidator_Page_PhoneNumberValidator extends CRM_Core_Page {
     $this->assign('regex_rules', $regexRuleSets);
   
     $this->assign('allow_options', array(
-      'spaces'    => 'Allow spaces',
-      'hyphens'   => 'Allow hyphens',
-      'fullstops' => 'Allow fullstops',
-      'brackets'  => 'Allow brackets',
-      'plus'      => 'Allow + instead of leading 00',
+      'spaces'    => 'Allow spaces " "',
+      'hyphens'   => 'Allow hyphens "-"',
+      'fullstops' => 'Allow fullstops "."',
+      'brackets'  => 'Allow brackets "(" and ")"',
+      'plus'      => 'Allow "+" instead of leading 00',
     ));
     
     parent::run();
