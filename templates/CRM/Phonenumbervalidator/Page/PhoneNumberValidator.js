@@ -112,7 +112,6 @@ CRM.PhoneNumberValidator.retrieveInvalidPhoneNumbersCount = function (selectedRe
     "selectedPhoneTypeId": selectedPhoneTypeId,
     "selectedContactTypeId": selectedContactTypeId
   }).done(function(result) {
-    console.log(result);
     if (result['is_error']){
       cj('#invalidPhonesCountDisplay').empty();
       cj('#invalidPhonesCountDisplay').append("<em>Error: " + result['error_message'] + "</em>");
@@ -138,28 +137,22 @@ CRM.PhoneNumberValidator.retrieveInvalidPhoneNumbersCount = function (selectedRe
 
 CRM.PhoneNumberValidator.retrieveInvalidPhoneNumbers = function (selectedRegexIds, selectedAllowCharactersIds, selectedPhoneTypeId, selectedContactTypeId){
     // Get and insert the new entries.
-    CRM.api('PhoneNumberValidator', 'Getinvalidphones', {
+    CRM.api3('PhoneNumberValidator', 'Getinvalidphones', {
         'sequential': 1,
         'selectedRegexIds': selectedRegexIds,
         'selectedAllowCharactersIds': selectedAllowCharactersIds,
         'selectedPhoneTypeId': selectedPhoneTypeId,
         'selectedContactTypeId': selectedContactTypeId
-    },
-        {success: function(data) {
-            cj('#invalidPhonesDisplay').empty(); // Remove spinner.
+    }).done(function(result) {
+        cj('#invalidPhonesDisplay').empty(); // Remove spinner.
 
-            cj('#invalidPhonesDisplay').append("<table id='invalidPhonesTable'>");
-            cj('#invalidPhonesTable').append("<tr><th>contact name</th><th>phone</th><th>extension</th><th>type</th><th>actions</th></tr>");
+        cj('#invalidPhonesDisplay').append("<table id='invalidPhonesTable'>");
+        cj('#invalidPhonesTable').append("<tr><th>contact name</th><th>phone</th><th>extension</th><th>type</th><th>actions</th></tr>");
 
-            cj.each(data.values, function(key, value) {
-                cj('#invalidPhonesTable').append(CRM.PhoneNumberValidator.makeTableRow(value['contact_id'],value['display_name'],value['phone_id'],value['phone_number'],value['phone_type_id'],value['phone_ext']));
-            });
-            cj('#invalidPhonesDisplay').append("</table>");
-            cj('.crm-editable').crmEditable();
-
-        }, error: function(data){
-            cj('#invalidPhonesDisplay').append("<em>Error: " + data['error_message'] + "</em>");
-        }
-    }
-    );
+        cj.each(result.values, function(key, value) {
+            cj('#invalidPhonesTable').append(CRM.PhoneNumberValidator.makeTableRow(value['contact_id'],value['display_name'],value['phone_id'],value['phone_number'],value['phone_type_id'],value['phone_ext']));
+        });
+        cj('#invalidPhonesDisplay').append("</table>");
+        cj('.crm-editable').crmEditable();
+    });
 }

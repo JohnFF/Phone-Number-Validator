@@ -20,11 +20,9 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
    * @param int $resultLimit
    */
   function __construct(array $regexRules, array $allowRules, $selectedContactTypeId, $selectedPhoneTypeId, $resultLimit = self::DEFAULT_RESULT_LIMIT) {
-    CRM_Core_Error::debug('Phone Number Validator constructor called', array(), TRUE);
     $this->sqlFromClause = self::buildFromStatementMyqlString($regexRules, $allowRules);
     $this->sqlWhereClause = self::buildWhereStatementMysqlString($selectedContactTypeId, $selectedPhoneTypeId);
     $this->sqlResultLimit = $resultLimit;
-    CRM_Core_Error::debug('Phone Number Validator constructor finished', array(), TRUE);
   }
 
   /*
