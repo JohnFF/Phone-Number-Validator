@@ -25,6 +25,10 @@ class CRM_Phonenumbervalidator_Utils {
         array('label' => 'Danish phones (national)',             'regex' => '^[0-9]{8}$'),
         array('label' => 'Danish phones (international)',        'regex' => '^0045[0-9]{8}$'),
       ),
+      'The Netherlands' => array(
+        array('label' => 'Dutch phones (national)',              'regex' => '^[0-9]{9}$'), // TODO can we include mobiles v landlines distinction?
+        array('label' => 'Dutch phones (international)',         'regex' => '^0031[0-9]{9}$'),
+      ),
       'France' => array(
         array('label' => 'French landlines (national)',          'regex' => '^0[1|2|3|4|5|8|9][0-9]{8}$'), // 10 digits with 0 instead of 0033 (followed by non zero what is OR in regex?
         array('label' => 'French mobiles (national)',            'regex' => '^0[6|7][0-9]{8}$'), // 06 and 07 are mobiles services
@@ -38,10 +42,6 @@ class CRM_Phonenumbervalidator_Utils {
       'Ireland' => array(
         array('label' => 'Irish phones (national)',              'regex' => '^1[0-9]{7}$'), // TODO can we include mobiles v landlines distinction?
         array('label' => 'Irish phones (international)',         'regex' => '^00353[0-9]{7}$'),
-      ),
-      'The Netherlands' => array(
-        array('label' => 'Dutch phones (national)',              'regex' => '^[0-9]{9}$'), // TODO can we include mobiles v landlines distinction?
-        array('label' => 'Dutch phones (international)',         'regex' => '^0031[0-9]{9}$'),
       ),
       'Norway' => array(
         array('label' => 'Norwegian landlines (national)',       'regex' => '^[^4|9][0-9]{7}$'),
