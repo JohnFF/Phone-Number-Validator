@@ -1,5 +1,5 @@
 Package: com.civifirst.phonenumbervalidator
-Copyright (C) 2015, FIXME <FIXME>
+Copyright (C) 2015, CiviFirst <http://civifirst.com>
 Licensed under the GNU Affero Public License 3.0 (below).
 
 -------------------------------------------------------------------------------
