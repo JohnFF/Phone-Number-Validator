@@ -54,7 +54,7 @@ from
 {crmStyle ext=com.civifirst.phonenumbervalidator file=templates/CRM/Phonenumbervalidator/Page/PhoneNumberValidator.css}
 
 <br/><br/>
-<div id='#phonenumbervalidator_footer'>
+<div id='phonenumbervalidator_footer'>
     <em>Think you've found a problem, or want another country to be added to the list? Log an issue <a href="https://github.com/JohnFF/Phone-Number-Validator">here</a>.</em>
     <br/>
     <em>Follow CiviFirst on <a href src='https://twitter.com/civifirst'>twitter</a>!</em>
