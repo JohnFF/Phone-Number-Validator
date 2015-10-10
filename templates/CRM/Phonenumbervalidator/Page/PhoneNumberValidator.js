@@ -134,37 +134,6 @@ CRM.PhoneNumberValidator.retrieveInvalidPhoneNumbersCount = function (selectedRe
         }
     }
   });
-    
-    /*// Get and insert the new entries.
-    CRM.api('PhoneNumberValidator', 'Getinvalidphonescount', {
-        'sequential': 1,
-        'selectedRegexIds': selectedRegexIds,
-        'selectedAllowCharactersIds': selectedAllowCharactersIds,
-        'selectedPhoneTypeId': selectedPhoneTypeId,
-        'selectedContactTypeId': selectedContactTypeId
-    },
-        {success: function(data) {
-            var brokenPhoneNumbersCount = parseInt(data.values[0]);
-
-            if (brokenPhoneNumbersCount == 0) {
-                cj('#invalidPhonesCountDisplay').append('<div>No broken phone numbers to display.</div>');
-                cj('#invalidPhonesDisplay').empty(); // remove spinner.
-                return;
-            } else {
-                CRM.PhoneNumberValidator.retrieveInvalidPhoneNumbers(selectedRegexIds, selectedAllowCharactersIds, selectedPhoneTypeId, selectedContactTypeId);
-
-                if (brokenPhoneNumbersCount > 50) {
-                    cj('#invalidPhonesCountDisplay').append('<div>Showing first 50 of ' + brokenPhoneNumbersCount + ' broken phone numbers.</div>');
-                } else {
-                    cj('#invalidPhonesCountDisplay').append('<div>Showing ' + brokenPhoneNumbersCount + ' broken phone numbers.</div>');
-                }
-            }
-        }, error: function(data){
-            cj('#invalidPhonesCountDisplay').empty();
-            cj('#invalidPhonesCountDisplay').append("<em>Error: " + data['error_message'] + "</em>");
-        }
-    }
-    );*/
 }
 
 CRM.PhoneNumberValidator.retrieveInvalidPhoneNumbers = function (selectedRegexIds, selectedAllowCharactersIds, selectedPhoneTypeId, selectedContactTypeId){
