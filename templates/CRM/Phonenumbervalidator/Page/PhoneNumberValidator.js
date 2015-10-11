@@ -6,7 +6,7 @@ cj.each(cj('select'), function(){
 // add the functionality to save the new phone type if it's changed
 cj(document).on('change', '.setPhoneType', function() {
         var phone_id = cj(this).attr("phone_id");
-        var new_value = cj(this).attr("value");
+        var new_value = cj(this).val();
         CRM.api('Phone','update',{ id:phone_id, phone_type_id:new_value }
                 ,{ success:function (data){
                 }
@@ -72,8 +72,9 @@ CRM.PhoneNumberValidator = CRM.PhoneNumberValidator || {};
 
 CRM.PhoneNumberValidator.makeTableRow = function (contactId, display_name, phoneId, phoneNumber, phoneTypeId, phoneExt){
 
-    var viewContactLink = '<a title="View ' + display_name + '\'s contact record." href="/civicrm/contact/view?reset=1&cid=' + contactId + '">' + display_name + '</a>';
-
+    //var viewContactLink = '<a title="View ' + display_name + '\'s contact record." href="/civicrm/contact/view?reset=1&cid=' + contactId + '">' + display_name + '</a>';
+    var viewContactLink = '<a title="View ' + display_name + '\'s contact record." href="' + CRM.url('civicrm/contact/view', {"reset":1,"cid":contactId}) + '">' + display_name + '</a>';
+    
     var phoneNumberString = '<span id="phone-' + phoneId + '" class="crmf-phone crm-editable">' + phoneNumber + '</span>';
 
     var phoneTypeString = '<select class="setPhoneType" phone_id="' + phoneId + '" selectedValue="' + phoneTypeId + '">';

@@ -55,9 +55,9 @@ class CRM_Phonenumbervalidator_Utils {
         array('label' => 'North American (America and Canada) (international)',  'regex' => '^001[2-9][0-9]{2}[2-9][0-9]{6}$'),
       ),        
       'Poland' => array(
-        array('label' => 'Polish landlines (national)',          'regex' => '^[5|6|7|8][0-9]{8}$'), // 9 digits.
+        array('label' => 'Polish landlines (national)',          'regex' => '^[0|1|2|3|4|9][0-9]{8}$'), // 9 digits.
         array('label' => 'Polish mobiles (national)',            'regex' => '^[5|6|7|8][0-9]{8}$'), //  5, 6, 7 or 8 as lead indicate mobile
-        array('label' => 'Polish landlines (international)',     'regex' => '^0048[5|6|7|8][0-9]{8}$'),
+        array('label' => 'Polish landlines (international)',     'regex' => '^0048[0|1|2|3|4|9][0-9]{8}$'),
         array('label' => 'Polish mobiles (international)',       'regex' => '^0048[5|6|7|8][0-9]{8}$'),
       ),
       'Spain' => array(
