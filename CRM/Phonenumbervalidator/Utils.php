@@ -61,10 +61,10 @@ class CRM_Phonenumbervalidator_Utils {
         array('label' => 'Polish mobiles (international)',       'regex' => '^0048[5|6|7|8][0-9]{8}$'),
       ),
       'Spain' => array(
-        array('label' => 'Spanish landlines (national)',         'regex' => '^9[6|7][0-9]{8}$'), // 10 digits with not 6 or 7 as the second digit
-        array('label' => 'Spanish mobiles (national)',           'regex' => '^9[6|7][0-9]{8}$'),
-        array('label' => 'Spanish landlines (international)',    'regex' => '^00349[6|7][0-9]{8}$'),
-        array('label' => 'Spanish mobiles (international)',      'regex' => '^00349[6|7][0-9]{8}$'),
+        array('label' => 'Spanish landlines (national)',         'regex' => '^9[1-8]{1}[0-9]{8}$'), // 9 digits, starting with 9 and 1-8 as the second digit
+        array('label' => 'Spanish mobiles (national)',           'regex' => '^[6|7][0-9]{8}$'), // 9 digits, starting with 6 or 7
+        array('label' => 'Spanish landlines (international)',    'regex' => '^00349[1-8]{1}[0-9]{8}$'),
+        array('label' => 'Spanish mobiles (international)',      'regex' => '^0034[6|7][0-9]{8}$'),
       ),
       'Switzerland' => array(
         array('label' => 'Swiss phones (national)',              'regex' => '^0[0-9]{9}$'),
