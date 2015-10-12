@@ -61,9 +61,9 @@ class CRM_Phonenumbervalidator_Utils {
         array('label' => 'Polish mobiles (international)',       'regex' => '^0048[5|6|7|8][0-9]{8}$'),
       ),
       'Spain' => array(
-        array('label' => 'Spanish landlines (national)',         'regex' => '^9[1-8]{1}[0-9]{7}$'), // 9 digits, starting with 9 and 1-8 as the second digit
-        array('label' => 'Spanish mobiles (national)',           'regex' => '^[6|7][0-9]{8}$'), // 9 digits, starting with 6 or 7
-        array('label' => 'Spanish landlines (international)',    'regex' => '^00349[1-8]{1}[0-9]{7}$'),
+        array('label' => 'Spanish landlines (national)',         'regex' => '^9[0-9]{8}$'), // 9 digits, starting with a 9
+        array('label' => 'Spanish mobiles (national)',           'regex' => '^[6|7][0-9]{8}$'), // 9 digits, starting with a 6 or a 7
+        array('label' => 'Spanish landlines (international)',    'regex' => '^00349[0-9]{8}$'),
         array('label' => 'Spanish mobiles (international)',      'regex' => '^0034[6|7][0-9]{8}$'),
       ),
       'Switzerland' => array(
