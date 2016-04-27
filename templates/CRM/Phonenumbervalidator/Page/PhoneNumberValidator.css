@@ -16,8 +16,8 @@
   padding-top: 10px;
 }
 
-#invalidPhonesCountDisplay {
-  padding-top: 10px;
+#invalidPhonesTable tr:nth-child(even), #invalidPhonesTable tr:nth-child(even) .setPhoneType {
+    background-color: #EEEEEE;
 }
 
 #phonenumbervalidator_footer {
