@@ -39,27 +39,42 @@ class CRM_Phonenumbervalidator_UtilsTest extends PHPUnit_Framework_TestCase {
    * TODO refactor to be more generic.
    */
   function testRegexRuleMatches () {
-    $invalidBritishNumbers = array(
-      "0711111111", // too short
-      "071111111111", // too long
-      "non-numeric", // non numeric
-      "07111111111 chars", // valid num with some chars on end
-    );
-
     $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'regex_rules');
     $britishRegexRules = $regexRules['Britain'];
+
+    $invalidBritishNumbers = array(
+      '0711111111', // too short
+      '071111111111', // too long
+      'non-numeric', // non numeric
+      '07111111111 chars', // valid num with some chars on end
+      '0220411111', // 10-digit landline beginning with 02
+    );
 
     foreach ($invalidBritishNumbers as $invalidBritishNumber) {
       foreach ($britishRegexRules as $britishRegexRule) {
         $this->assertEquals(0, preg_match('/' . $britishRegexRule['regex'] . '/', $invalidBritishNumber));
       }
     }
+
+    $validBritishNumbers = array(
+      '07111111111', // 11-digit mobile
+      '02081111111', // 11-digit landline
+      '0120411111', // 10-digit landline beginning with 01
+    );
+
+    foreach ($validBritishNumbers as $validBritishNumber) {
+      $matchCount = 0;
+      foreach ($britishRegexRules as $britishRegexRule) {
+        $matchCount += preg_match('/' . $britishRegexRule['regex'] . '/', $validBritishNumber);
+      }
+      $this->assertEquals(1, $matchCount, "Failed on $validBritishNumber.");
+    }
   }
 
   function testGetRegexRule(){
     $regexRuleSets = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'regex_rules');
 
-    $this->assertEquals('^0[^7][0-9]{9}$', CRM_Phonenumbervalidator_Utils::getRegexRule($regexRuleSets, 'Britain_0'));
+    $this->assertEquals('^0(([^7][0-9]{9})|(1[0-9]{8}))$', CRM_Phonenumbervalidator_Utils::getRegexRule($regexRuleSets, 'Britain_0'));
 
     $this->setExpectedException(
       'Exception', 'Phone Number Validator getRegexRule: Id does not exist for country Britain - see log error.'
