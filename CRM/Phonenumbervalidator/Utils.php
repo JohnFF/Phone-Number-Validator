@@ -16,9 +16,9 @@ class CRM_Phonenumbervalidator_Utils {
         array('label' => 'Australian mobiles (international)',   'regex' => '^00614[0-9]{8}$'),
       ),
       'Britain' => array(
-        array('label' => 'British landlines (national)',         'regex' => '^0[^7][0-9]{9}$'),
+        array('label' => 'British landlines (national)',         'regex' => '^0(([^7][0-9]{9})|(1[0-9]{8}))$'), // either length 11 or 10 if starts 01
         array('label' => 'British mobiles (national)',           'regex' => '^07[0-9]{9}$'),
-        array('label' => 'British landlines (international)',    'regex' => '^0044[^7][0-9]{9}$'),
+        array('label' => 'British landlines (international)',    'regex' => '^0044(([^7][0-9]{9})|(1[0-9]{8}))$'),
         array('label' => 'British mobiles (international)',      'regex' => '^00447[0-9]{9}$'),
       ),
       'Denmark' => array(
