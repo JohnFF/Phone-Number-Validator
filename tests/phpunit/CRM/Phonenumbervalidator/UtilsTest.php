@@ -49,7 +49,7 @@ class CRM_Phonenumbervalidator_UtilsTest extends \PHPUnit_Framework_TestCase imp
     CRM_Phonenumbervalidator_Utils::installDefaults();
 
     Civi::settings()->loadValues();
-    
+
     $expectedValues = CRM_Phonenumbervalidator_Utils::getPhoneNumberRegexes();
 
     $actualValues = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
@@ -58,10 +58,9 @@ class CRM_Phonenumbervalidator_UtilsTest extends \PHPUnit_Framework_TestCase imp
   }
 
   /**
-   * Test the regex rules. To keep it a pure test, this assumes all the character substitution has already been done.
-   * TODO refactor to be more generic.
+   * Test the British regex rules. To keep it a pure test, this assumes all the character substitution has already been done.
    */
-  function testRegexRuleMatches () {
+  function testBritishRegexRuleMatches () {
     $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
     $britishRegexRules = $regexRules['Britain'];
 
@@ -83,6 +82,7 @@ class CRM_Phonenumbervalidator_UtilsTest extends \PHPUnit_Framework_TestCase imp
       '07111111111', // 11-digit mobile
       '02081111111', // 11-digit landline
       '0120411111', // 10-digit landline beginning with 01
+      '0044120411111', // 10-digit international landline beginning with 00441
     );
 
     foreach ($validBritishNumbers as $validBritishNumber) {
