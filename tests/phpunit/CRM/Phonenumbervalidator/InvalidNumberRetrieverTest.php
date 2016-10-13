@@ -36,18 +36,66 @@ class CRM_Phonenumbervalidator_InvalidNumberRetrieverTest extends \PHPUnit_Frame
     parent::tearDown();
   }
 
-  /**
-   * Example: Test that a version is returned.
-   */
-  public function testWellFormedVersion() {
-    $this->assertRegExp('/^([0-9\.]|alpha|beta)*$/', \CRM_Utils_System::version());
+  function testBuildReplacementMysqlString () {
+    // Test hyphens and brackets.
+    $selectedAllowCharactersArray = array('hyphens', 'brackets');
+    $expectedOutput = "REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '')";
+    $output = CRM_Phonenumbervalidator_InvalidNumberRetriever::buildReplacementMysqlString($selectedAllowCharactersArray);
+    $this->assertEquals($expectedOutput, $output, "Found " . print_r($output, TRUE));
+
+    // Test no ignore characts.
+    $selectedIgnoreCharactersArray = array();
+    $expectedOutput = "phone";
+    $output = CRM_Phonenumbervalidator_InvalidNumberRetriever::buildReplacementMysqlString($selectedIgnoreCharactersArray);
+    $this->assertEquals($expectedOutput, $output, "Found " . print_r($output, TRUE));
   }
 
-  /**
-   * Example: Test that we're using a fake CMS.
-   */
-  public function testWellFormedUF() {
-    $this->assertEquals('UnitTests', CIVICRM_UF);
+  function testBuildFromStatementMyqlString () {
+    $selectedRegexRuleIds = array('Britain_0', 'Britain_1', 'Britain_2', 'Britain_3');
+    $selectedAllowCharacterRules = array('hyphens', 'brackets');
+
+    $expectedOutput = "FROM (SELECT id, phone, phone_ext, phone_type_id, contact_id FROM civicrm_phone "
+            . "WHERE (REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '') NOT REGEXP 'Britain_0') AND "
+            . "(REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '') NOT REGEXP 'Britain_1') AND "
+            . "(REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '') NOT REGEXP 'Britain_2') AND "
+            . "(REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '') NOT REGEXP 'Britain_3')) "
+            . "AS phone JOIN civicrm_contact AS contact ON phone.contact_id = contact.id ";
+
+    $output = CRM_Phonenumbervalidator_InvalidNumberRetriever::buildFromStatementMyqlString($selectedRegexRuleIds, $selectedAllowCharacterRules);
+
+    $this->assertEquals($expectedOutput, $output, "Found " . print_r($output, TRUE));
   }
 
+  function testBuildWhereStatementMyqlString () {
+    $testData = array(
+      array(
+        'contactTypeId' => '1',
+        'phoneTypeId' => '1',
+        'expectedStatementOutput' => "WHERE 1 AND contact_type LIKE '%%1%' AND phone_type_id = '%2' ",
+        'expectedParamsOutput' => array(1 => array(0 => 'Individual', 1 => 'String', 2 => 2), 2 => array(0 => 1, 1 => 'Int')),
+      ),
+      array(
+        'contactTypeId' => '',
+        'phoneTypeId' => '1',
+        'expectedStatementOutput' => "WHERE 1 AND phone_type_id = '%2' ",
+        'expectedParamsOutput' => array(2 => array(0 => 1, 1 => 'Int')),
+      ),
+      array(
+        'contactTypeId' => '1',
+        'phoneTypeId' => '',
+        'expectedStatementOutput' => "WHERE 1 AND contact_type LIKE '%%1%' ",
+        'expectedParamsOutput' => array(1 => array(0 => 'Individual', 1 => 'String', 2 => 2)),
+      ),
+//      array('contactTypeId' => '1000', 'phoneTypeId' => '1', 'expectedOutput' => ''),
+//      array('contactTypeId' => '1', 'phoneTypeId' => '1000', 'expectedOutput' => ''),
+//      array('contactTypeId' => 'string where id should be', 'phoneTypeId' => '1', 'expectedOutput' => ''),
+//      array('contactTypeId' => '1', 'phoneTypeId' => 'string where id should be', 'expectedOutput' => ''),
+    );
+
+    foreach($testData as $eachTest){
+      $actualOutput = CRM_Phonenumbervalidator_InvalidNumberRetriever::buildWhereStatementMysqlString($eachTest['contactTypeId'], $eachTest['phoneTypeId']);
+      $this->assertEquals($eachTest['expectedStatementOutput'], $actualOutput['statement'], "Test failed, actual output was: " . print_r($actualOutput['statement'], TRUE));
+      $this->assertEquals($eachTest['expectedParamsOutput'], $actualOutput['params'], "Test failed, actual output was: " . print_r($actualOutput['params'], TRUE));
+    }
+  }
 }

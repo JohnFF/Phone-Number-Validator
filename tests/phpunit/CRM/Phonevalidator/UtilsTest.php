@@ -1,11 +1,11 @@
 <?php
 
-ini_set('include_path', '/var/www/html/prod/drupal');
-require_once '/var/www/html/prod/drupal/sites/all/modules/civicrm/civicrm.config.php';
-CRM_Core_Config::singleton();
+//ini_set('include_path', '/var/www/html/prod/drupal');
+//require_once '/var/www/html/prod/drupal/sites/all/modules/civicrm/civicrm.config.php';
+//CRM_Core_Config::singleton();
 
 // class CRM_Phonenumbervalidator_UtilsTest extends CiviUnitTestCase {
-class CRM_Phonenumbervalidator_UtilsTest extends PHPUnit_Framework_TestCase {
+class CRM_Phonenumbervalidator_UtilsTesta extends PHPUnit_Framework_TestCase {
   function setUp() {
     // If your test manipulates any SQL tables, then you should truncate
     // them to ensure a consisting starting point for all tests
