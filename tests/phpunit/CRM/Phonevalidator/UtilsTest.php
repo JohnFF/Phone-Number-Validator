@@ -23,13 +23,13 @@ class CRM_Phonenumbervalidator_UtilsTest extends PHPUnit_Framework_TestCase {
   function testInstallAndUninstallSettings(){
     CRM_Phonenumbervalidator_Utils::deleteDbSettings();
 
-    $this->assertEquals(NULL, CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'regex_rules'));
+    $this->assertEquals(NULL, CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules'));
 
     CRM_Phonenumbervalidator_Utils::installDefaults();
 
     $expectedValues = CRM_Phonenumbervalidator_Utils::getPhoneNumberRegexes();
 
-    $actualValues = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'regex_rules');
+    $actualValues = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
 
     $this->assertEquals($expectedValues, $actualValues, "Found " . print_r($actualValues, TRUE));
   }
@@ -39,7 +39,7 @@ class CRM_Phonenumbervalidator_UtilsTest extends PHPUnit_Framework_TestCase {
    * TODO refactor to be more generic.
    */
   function testRegexRuleMatches () {
-    $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'regex_rules');
+    $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
     $britishRegexRules = $regexRules['Britain'];
 
     $invalidBritishNumbers = array(
@@ -72,7 +72,7 @@ class CRM_Phonenumbervalidator_UtilsTest extends PHPUnit_Framework_TestCase {
   }
 
   function testGetRegexRule(){
-    $regexRuleSets = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'regex_rules');
+    $regexRuleSets = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
 
     $this->assertEquals('^0(([^7][0-9]{9})|(1[0-9]{8}))$', CRM_Phonenumbervalidator_Utils::getRegexRule($regexRuleSets, 'Britain_0'));
 

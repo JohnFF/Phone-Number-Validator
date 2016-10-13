@@ -102,11 +102,11 @@ class CRM_Phonenumbervalidator_Utils {
    * Add a placeholder for the last selected values in the interface.
    */
   public static function installLastSelectedSettingsDefault(){
-    CRM_Core_BAO_Setting::setItem('-1', 'com.civifirst.phonenumbervalidator', 'last_selected_settings');
+    CRM_Core_BAO_Setting::setItem('-1', 'com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.last_selected_settings');
 
     // Check if the settings are now present (as setItem returns void).
     $aStoredLastSelectedSettings = CRM_Core_BAO_Setting::getItem(
-      'com.civifirst.phonenumbervalidator', 'last_selected_settings');
+      'com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.last_selected_settings');
 
     if (!$aStoredLastSelectedSettings) {
       throw new Exception('Phone Number Validator Install: Could not store the phone regexes.');
