@@ -17,7 +17,7 @@ class CRM_Phonenumbervalidator_Page_PhoneNumberValidator extends CRM_Core_Page {
       'hyphens'   => 'Allow hyphens "-"',
       'fullstops' => 'Allow fullstops "."',
       'brackets'  => 'Allow brackets "(" and ")"',
-      'slash'     => 'Allow slash "/"',
+      'slash'     => 'Allow slashes "/"',
       'plus'      => 'Allow "+" instead of leading 00',
     ));
     

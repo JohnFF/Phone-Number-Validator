@@ -1,7 +1,7 @@
 # Phone-Number-Validator
 A tool that allows you to easily correct invalid phone numbers.
 
-Country phone numbers supported: America, Australia, Britain, Canada, Denmark, France, Germany, Ireland, The Netherlands, Norway, Poland, Spain, Switzerland.
+Country phone numbers supported: America, Australia, Belgium, Britain, Canada, Denmark, France, Germany, Ireland, The Netherlands, Norway, Poland, Spain, Switzerland.
 
 To start using, install and go to http://{yoursite}/civicrm/phonenumbervalidator
 

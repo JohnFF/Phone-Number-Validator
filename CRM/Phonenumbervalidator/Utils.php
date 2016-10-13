@@ -17,9 +17,9 @@ class CRM_Phonenumbervalidator_Utils {
       ),
       'Belgium' => array(
         array('label' => 'Belgian phones (national)',              'regex' => '^0[0-9]{8}$'),
-        array('label' => 'Belgian mobiles (national)',              'regex' => '^04[7,8,9][0-9]{7}$'),
+        array('label' => 'Belgian mobiles (national)',              'regex' => '^04[6,7,8,9][0-9]{7}$'),
         array('label' => 'Belgian phones (international)',         'regex' => '^0032[0-9]{8}$'),
-        array('label' => 'Belgian mobiles (international)',         'regex' => '^00324[7,8,9][0-9]{7}$'),
+        array('label' => 'Belgian mobiles (international)',         'regex' => '^00324[6,7,8,9][0-9]{7}$'),
       ),
       'Britain' => array(
         array('label' => 'British landlines (national)',         'regex' => '^0(([^7][0-9]{9})|(1[0-9]{8}))$'), // either length 11 or 10 if starts 01
