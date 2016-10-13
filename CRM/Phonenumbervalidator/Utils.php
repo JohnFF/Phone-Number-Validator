@@ -87,11 +87,11 @@ class CRM_Phonenumbervalidator_Utils {
     $aValidPhonesRegexes = self::getPhoneNumberRegexes();
 
     CRM_Core_BAO_Setting::setItem($aValidPhonesRegexes, 'com.civifirst.phonenumbervalidator',
-        'regex_rules');
+        'com.civifirst.phonenumbervalidator.regex_rules');
 
     // Check if the settings are now present (as setItem returns void).
     $aStoredValidPhonesRegexes = CRM_Core_BAO_Setting::getItem(
-      'com.civifirst.phonenumbervalidator', 'regex_rules');
+      'com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
 
     if (!$aStoredValidPhonesRegexes) {
       throw new Exception('Phone Number Validator Install: Could not store the phone regexes.');
@@ -102,11 +102,11 @@ class CRM_Phonenumbervalidator_Utils {
    * Add a placeholder for the last selected values in the interface.
    */
   public static function installLastSelectedSettingsDefault(){
-    CRM_Core_BAO_Setting::setItem('-1', 'com.civifirst.phonenumbervalidator', 'last_selected_settings');
+    CRM_Core_BAO_Setting::setItem('-1', 'com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.last_selected_settings');
 
     // Check if the settings are now present (as setItem returns void).
     $aStoredLastSelectedSettings = CRM_Core_BAO_Setting::getItem(
-      'com.civifirst.phonenumbervalidator', 'last_selected_settings');
+      'com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.last_selected_settings');
 
     if (!$aStoredLastSelectedSettings) {
       throw new Exception('Phone Number Validator Install: Could not store the phone regexes.');
@@ -127,7 +127,7 @@ class CRM_Phonenumbervalidator_Utils {
    * Removes all settings from civicrm DB added by the phonenumbervalidator.
    */
   public static function deleteDbSettings() {
-    $deleteMysql = 'DELETE FROM civicrm_setting WHERE group_name = "com.civifirst.phonenumbervalidator"';
+    $deleteMysql = 'DELETE FROM civicrm_setting WHERE name LIKE "com.civifirst.phonenumbervalidator%"';
     CRM_Core_DAO::executeQuery($deleteMysql);
   }
 
@@ -171,7 +171,7 @@ class CRM_Phonenumbervalidator_Utils {
    * @return array of regexes
    */
   public static function getSelectedRegexRules(array $selectedRegexRuleIds){
-    $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'regex_rules');
+    $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
     $selectedRegexRules = array();
     foreach($selectedRegexRuleIds as $selectedRegexRuleId){
       $selectedRegexRules[] = self::getRegexRule($regexRules, $selectedRegexRuleId);

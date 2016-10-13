@@ -1,19 +1,38 @@
 <?php
 
-ini_set('include_path', '/var/www/html/prod/drupal');
-require_once '/var/www/html/prod/drupal/sites/all/modules/civicrm/civicrm.config.php';
-CRM_Core_Config::singleton();
+use Civi\Test\HeadlessInterface;
+use Civi\Test\HookInterface;
+use Civi\Test\TransactionalInterface;
 
-// class CRM_Phonenumbervalidator_UtilsTest extends CiviUnitTestCase {
-class CRM_Phonenumbervalidator_UtilsTest extends PHPUnit_Framework_TestCase {
-  function setUp() {
-    // If your test manipulates any SQL tables, then you should truncate
-    // them to ensure a consisting starting point for all tests
-    // $this->quickCleanup(array('example_table_name'));
+/**
+ * FIXME - Add test description.
+ *
+ * Tips:
+ *  - With HookInterface, you may implement CiviCRM hooks directly in the test class.
+ *    Simply create corresponding functions (e.g. "hook_civicrm_post(...)" or similar).
+ *  - With TransactionalInterface, any data changes made by setUp() or test****() functions will
+ *    rollback automatically -- as long as you don't manipulate schema or truncate tables.
+ *    If this test needs to manipulate schema or truncate tables, then either:
+ *       a. Do all that using setupHeadless() and Civi\Test.
+ *       b. Disable TransactionalInterface, and handle all setup/teardown yourself.
+ *
+ * @group headless
+ */
+class CRM_Phonenumbervalidator_UtilsTest extends \PHPUnit_Framework_TestCase implements HeadlessInterface, HookInterface, TransactionalInterface {
+
+  public function setUpHeadless() {
+    // Civi\Test has many helpers, like install(), uninstall(), sql(), and sqlFile().
+    // See: https://github.com/civicrm/org.civicrm.testapalooza/blob/master/civi-test.md
+    return \Civi\Test::headless()
+      ->installMe(__DIR__)
+      ->apply();
+  }
+
+  public function setUp() {
     parent::setUp();
   }
 
-  function tearDown() {
+  public function tearDown() {
     parent::tearDown();
   }
 
@@ -23,23 +42,26 @@ class CRM_Phonenumbervalidator_UtilsTest extends PHPUnit_Framework_TestCase {
   function testInstallAndUninstallSettings(){
     CRM_Phonenumbervalidator_Utils::deleteDbSettings();
 
-    $this->assertEquals(NULL, CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'regex_rules'));
+    Civi::settings()->loadValues();
+
+    $this->assertEquals(NULL, CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules'));
 
     CRM_Phonenumbervalidator_Utils::installDefaults();
 
+    Civi::settings()->loadValues();
+
     $expectedValues = CRM_Phonenumbervalidator_Utils::getPhoneNumberRegexes();
 
-    $actualValues = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'regex_rules');
+    $actualValues = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
 
     $this->assertEquals($expectedValues, $actualValues, "Found " . print_r($actualValues, TRUE));
   }
 
   /**
-   * Test the regex rules. To keep it a pure test, this assumes all the character substitution has already been done.
-   * TODO refactor to be more generic.
+   * Test the British regex rules. To keep it a pure test, this assumes all the character substitution has already been done.
    */
-  function testRegexRuleMatches () {
-    $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'regex_rules');
+  function testBritishRegexRuleMatches () {
+    $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
     $britishRegexRules = $regexRules['Britain'];
 
     $invalidBritishNumbers = array(
@@ -60,6 +82,7 @@ class CRM_Phonenumbervalidator_UtilsTest extends PHPUnit_Framework_TestCase {
       '07111111111', // 11-digit mobile
       '02081111111', // 11-digit landline
       '0120411111', // 10-digit landline beginning with 01
+      '0044120411111', // 10-digit international landline beginning with 00441
     );
 
     foreach ($validBritishNumbers as $validBritishNumber) {
@@ -71,8 +94,11 @@ class CRM_Phonenumbervalidator_UtilsTest extends PHPUnit_Framework_TestCase {
     }
   }
 
+  /**
+   * Test the retrieval of the regices.
+   */
   function testGetRegexRule(){
-    $regexRuleSets = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'regex_rules');
+    $regexRuleSets = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
 
     $this->assertEquals('^0(([^7][0-9]{9})|(1[0-9]{8}))$', CRM_Phonenumbervalidator_Utils::getRegexRule($regexRuleSets, 'Britain_0'));
 
