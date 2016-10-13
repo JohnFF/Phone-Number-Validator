@@ -151,6 +151,10 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
       $charactersToAllowArray[] = ')';
     }
 
+    if (in_array('slash', $selectedAllowCharactersArray)){
+      $charactersToAllowArray[] = '/';
+    }
+
     if (in_array('spaces', $selectedAllowCharactersArray)){
       $charactersToAllowArray[] = ' ';
     }
