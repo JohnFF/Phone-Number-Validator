@@ -2,7 +2,9 @@
 <extension key="com.civifirst.phonenumbervalidator" type="module">
   <file>phonenumbervalidator</file>
   <name>Phone Number Validator</name>
-  <description>The popular UK Phone Number Validator has been rewritten to support multiple countries' phone systems and common formatting options.
+  <description>The popular UK Phone Number Validator has been rewritten to support multiple countries' phone systems and common formatting options. 
+      This tool provides an easy interface to find and fix invalid phone numbers. 
+      Look under the Contacts menu -> Contact Validation -> Phone number validator.
       If your country's phone system is missing, please submit an issue on GitHub so that I can add it.</description>
   <license>AGPL-3.0</license>
   <maintainer>
