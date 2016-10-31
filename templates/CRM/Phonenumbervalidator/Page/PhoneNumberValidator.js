@@ -17,7 +17,7 @@ cj(document).on('change', '.setPhoneType', function() {
 // make the delete phone record links work
 cj(document).on('click', '.button_delete', function(){
         var phone_id = cj(this).attr('phone_id');
-        cj().crmAPI ('Phone','delete',{ id:phone_id }
+        CRM.api('Phone','delete',{ id:phone_id }
                 ,{ success:function (data){
                         cj("." + phone_id).fadeOut();
                 }
