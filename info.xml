@@ -16,7 +16,7 @@
     <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
   </urls>
   <releaseDate>2015-06-19</releaseDate>
-  <version>2.03</version>
+  <version>2.0.4</version>
   <develStage>stable</develStage>
   <compatibility>
     <ver>4.4</ver>
