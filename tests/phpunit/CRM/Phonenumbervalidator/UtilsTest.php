@@ -5,16 +5,7 @@ use Civi\Test\HookInterface;
 use Civi\Test\TransactionalInterface;
 
 /**
- * FIXME - Add test description.
- *
- * Tips:
- *  - With HookInterface, you may implement CiviCRM hooks directly in the test class.
- *    Simply create corresponding functions (e.g. "hook_civicrm_post(...)" or similar).
- *  - With TransactionalInterface, any data changes made by setUp() or test****() functions will
- *    rollback automatically -- as long as you don't manipulate schema or truncate tables.
- *    If this test needs to manipulate schema or truncate tables, then either:
- *       a. Do all that using setupHeadless() and Civi\Test.
- *       b. Disable TransactionalInterface, and handle all setup/teardown yourself.
+ * This tests the utils functions, including the regexes themselves.
  *
  * @group headless
  */
@@ -91,6 +82,27 @@ class CRM_Phonenumbervalidator_UtilsTest extends \PHPUnit_Framework_TestCase imp
         $matchCount += preg_match('/' . $britishRegexRule['regex'] . '/', $validBritishNumber);
       }
       $this->assertEquals(1, $matchCount, "Failed on $validBritishNumber.");
+    }
+  }
+
+  /**
+   * Test the South Africa rules.
+   */
+  function testSouthAfricanRegexRuleMatches () {
+    $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
+    $southAfricanRegexRules = $regexRules['South Africa'];
+
+    $validSouthAfricanNumbers = array(
+      '0123456789', // National.
+      '0027123456789', // International.
+    );
+
+    foreach ($validSouthAfricanNumbers as $validSouthAfricanNumber) {
+      $matchCount = 0;
+      foreach ($southAfricanRegexRules as $southAfricanRegexRule) {
+        $matchCount += preg_match('/' . $southAfricanRegexRule['regex'] . '/', $validSouthAfricanNumber);
+      }
+      $this->assertEquals(1, $matchCount, "Failed on $validSouthAfricanNumber.");
     }
   }
 

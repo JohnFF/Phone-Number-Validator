@@ -28,4 +28,16 @@ class CRM_Phonenumbervalidator_Upgrader extends CRM_Phonenumbervalidator_Upgrade
     CRM_Phonenumbervalidator_Utils::installPhoneNumberRegexes();
     return TRUE;
   }
+
+  /**
+   * Upgrade 2.05 Reinstalls the phone numbers, after including South African phones.
+   *
+   * @return TRUE on success
+   * @throws Exception
+   */
+  public function upgrade_2050() {
+    $this->ctx->log->info('Applying update 2050.');
+    CRM_Phonenumbervalidator_Utils::installPhoneNumberRegexes();
+    return TRUE;
+  }
 }
