@@ -57,7 +57,7 @@ class CRM_Phonenumbervalidator_Utils {
       ),
       'North America' => array(
         // NXX-NXX-XXXX Where N is any digit 2-9 and X is any digit 0-9
-        array('label' => 'North American (America and Canada) (local)',          'regex' => '^[2-9][0-9]{2}[2-9][0-9]{6}$'),
+        array('label' => 'North American (America and Canada) (national)',          'regex' => '^[2-9][0-9]{2}[2-9][0-9]{6}$'),
         array('label' => 'North American (America and Canada) (international)',  'regex' => '^001[2-9][0-9]{2}[2-9][0-9]{6}$'),
       ),        
       'Poland' => array(
@@ -71,6 +71,10 @@ class CRM_Phonenumbervalidator_Utils {
         array('label' => 'Spanish mobiles (national)',           'regex' => '^[6|7][0-9]{8}$'), // 9 digits, starting with a 6 or a 7
         array('label' => 'Spanish landlines (international)',    'regex' => '^00349[0-9]{8}$'),
         array('label' => 'Spanish mobiles (international)',      'regex' => '^0034[6|7][0-9]{8}$'),
+      ),
+      'South Africa' => array(
+        array('label' => 'South African landlines (national)',         'regex' => '^0[1-8][0-9]{8}$'),
+        array('label' => 'South African landlines (international)',    'regex' => '^0027[1-8][0-9]{8}$'),
       ),
       'Switzerland' => array(
         array('label' => 'Swiss phones (national)',              'regex' => '^0[0-9]{9}$'),
