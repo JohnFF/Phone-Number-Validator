@@ -12,24 +12,24 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
   private $sqlWhereClause;
   private $sqlResultLimit;
 
-  /*
+  /**
    * @param array $regexRules
    * @param array $allowRules
    * @param int $selectedContactTypeId
    * @param int $selectedPhoneTypeId
    * @param int $resultLimit
    */
-  function __construct(array $regexRules, array $allowRules, $selectedContactTypeId, $selectedPhoneTypeId, $resultLimit = self::DEFAULT_RESULT_LIMIT) {
+  public function __construct(array $regexRules, array $allowRules, $selectedContactTypeId, $selectedPhoneTypeId, $resultLimit = self::DEFAULT_RESULT_LIMIT) {
     $this->sqlFromClause = self::buildFromStatementMyqlString($regexRules, $allowRules);
     $this->sqlWhereClause = self::buildWhereStatementMysqlString($selectedContactTypeId, $selectedPhoneTypeId);
     $this->sqlResultLimit = $resultLimit;
   }
 
-  /*
+  /**
    * Performs the SQL query to retrieve the broken phone numbers.
    * @return array $invalidPhoneNumbers
    */
-  public function getInvalidPhoneNumbers(){
+  public function getInvalidPhoneNumbers() {
     $getBrokenPhonesSelectSql = "SELECT contact.id AS contact_id, "
       . "display_name, "
       . "phone.id AS phone_id, "
@@ -48,7 +48,7 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
 
     $invalidPhoneNumbers = array();
 
-    while ($dao->fetch()){
+    while ($dao->fetch()) {
       $rawReturnValues = array(
         'contact_id' => $dao->contact_id,
         'display_name' => $dao->display_name,
@@ -58,7 +58,7 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
         'phone_ext' => $dao->phone_ext,
       );
 
-      if ($rawReturnValues['phone_ext'] == NULL){
+      if ($rawReturnValues['phone_ext'] == NULL) {
         $rawReturnValues['phone_ext'] = '';
       }
 
@@ -68,11 +68,11 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
     return $invalidPhoneNumbers;
   }
 
-  /*
+  /**
    * Performs the SQL query to retrieve the number of broken phone numbers.
    * @return array $invalidPhoneNumbersCount
    */
-  public function getInvalidPhoneNumbersCount(){
+  public function getInvalidPhoneNumbersCount() {
     $getBrokenPhonesCountSql = "SELECT count(contact.id) AS count ";
 
     $queryString = $getBrokenPhonesCountSql .
@@ -91,14 +91,14 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
     return $invalidPhoneNumbersCount;
   }
 
-  /*
+  /**
    * Used to initialise this object's sqlFromClause variable.
    *
    * @param array $selectedRegexRules
    * @param array $selectedAllowCharacterRules
    * @return string $getBrokenPhonesFromSql part of a MySQL query
    */
-  public static function buildFromStatementMyqlString ($selectedRegexRules, $selectedAllowCharacterRules) {
+  public static function buildFromStatementMyqlString($selectedRegexRules, $selectedAllowCharacterRules) {
     $getBrokenPhonesFromSql = "FROM ";
     $getBrokenPhonesFromSql .= "(SELECT id, phone, phone_ext, phone_type_id, contact_id "
         . "FROM civicrm_phone WHERE ";
@@ -107,26 +107,26 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
 
     $phoneMysqlString = self::buildReplacementMysqlString($selectedAllowCharacterRules);
 
-    foreach($selectedRegexRules as $rule){
+    foreach ($selectedRegexRules as $rule) {
       $fromRegexSql[] = "($phoneMysqlString NOT REGEXP '" . $rule . "')";
     }
 
-    $getBrokenPhonesFromSql .=  implode(" AND ", $fromRegexSql) . ") AS phone ";
+    $getBrokenPhonesFromSql .= implode(" AND ", $fromRegexSql) . ") AS phone ";
     $getBrokenPhonesFromSql .= 'JOIN civicrm_contact AS contact '
         . 'ON phone.contact_id = contact.id ';
 
     return $getBrokenPhonesFromSql;
   }
 
-  /*
+  /**
    * Generates the sql that does string replacement ahead of the regex call.
    *
    * @param array $selectedAllowCharactersArray
    * @return array $mysqlPhoneString part of a MySQL query
    */
-  public static function buildReplacementMysqlString ($selectedAllowCharactersArray) {
+  public static function buildReplacementMysqlString($selectedAllowCharactersArray) {
 
-    if (in_array('plus', $selectedAllowCharactersArray)){
+    if (in_array('plus', $selectedAllowCharactersArray)) {
       // Replace the + with 00 only for the first letter
       // then concatenate it with the rest of the phone number
       $mysqlPhoneString = "CONCAT(REPLACE(SUBSTRING(phone,1,1), '+', '00'), "
@@ -138,47 +138,47 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
 
     $charactersToAllowArray = array();
 
-    if (in_array('hyphens', $selectedAllowCharactersArray)){
+    if (in_array('hyphens', $selectedAllowCharactersArray)) {
       $charactersToAllowArray[] = '-';
     }
 
-    if (in_array('fullstops', $selectedAllowCharactersArray)){
+    if (in_array('fullstops', $selectedAllowCharactersArray)) {
       $charactersToAllowArray[] = '.';
     }
 
-    if (in_array('brackets', $selectedAllowCharactersArray)){
+    if (in_array('brackets', $selectedAllowCharactersArray)) {
       $charactersToAllowArray[] = '(';
       $charactersToAllowArray[] = ')';
     }
 
-    if (in_array('slash', $selectedAllowCharactersArray)){
+    if (in_array('slash', $selectedAllowCharactersArray)) {
       $charactersToAllowArray[] = '/';
     }
 
-    if (in_array('spaces', $selectedAllowCharactersArray)){
+    if (in_array('spaces', $selectedAllowCharactersArray)) {
       $charactersToAllowArray[] = ' ';
     }
 
-    foreach ($charactersToAllowArray as $characterToAllow){
+    foreach ($charactersToAllowArray as $characterToAllow) {
       $mysqlPhoneString = "REPLACE($mysqlPhoneString, '$characterToAllow', '')";
     }
 
     return $mysqlPhoneString;
   }
 
-  /*
+  /**
    * Used to initialise this object's buildWhereStatementMysqlString variable.
    *
    * @param int $selectedContactTypeId
    * @param int $selectedPhoneTypeId
    * @return array containing string $getBrokenPhonesWhereSql and array $queryParameters
    */
-  public static function buildWhereStatementMysqlString($selectedContactTypeId, $selectedPhoneTypeId){
+  public static function buildWhereStatementMysqlString($selectedContactTypeId, $selectedPhoneTypeId) {
 
     $getBrokenPhonesWhereSql = "WHERE 1 ";
     $queryParameters = array();
 
-    if ($selectedContactTypeId){
+    if ($selectedContactTypeId) {
       // Check that we have been passed an integer.
       if (intval($selectedContactTypeId) == 0) {
         throw new exception("Phone Number Validator - passed an invalid selected contact type id. String received");
@@ -192,16 +192,16 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
       );
       $getContactTypesResults = civicrm_api('ContactType', 'getsingle', $getContactTypesParams);
 
-      if (civicrm_error($getContactTypesResults)){
-        $errorMessage = "Phone Number Validator buildWhereStatementMysqlString: couldn't retrieve contact types. Input : " . 
-          print_r($getContactTypesParams, TRUE) . " Output: " . print_r($getContactTypesResults, TRUE) ;
+      if (civicrm_error($getContactTypesResults)) {
+        $errorMessage = "Phone Number Validator buildWhereStatementMysqlString: couldn't retrieve contact types. Input : " .
+          print_r($getContactTypesParams, TRUE) . " Output: " . print_r($getContactTypesResults, TRUE);
         CRM_Core_Error::debug($errorMessage);
         throw new exception($errorMessage);
       }
 
       // If the contact type has a parent id then it is a contact sub type.
       // Otherwise it's a contact type.
-      if (array_key_exists('parent_id', $getContactTypesResults)){
+      if (array_key_exists('parent_id', $getContactTypesResults)) {
         $getBrokenPhonesWhereSql .= "AND contact_sub_type LIKE '%%1%' ";
         $queryParameters['1'] = array($getContactTypesResults['name'], 'String', CRM_Core_DAO::QUERY_FORMAT_NO_QUOTES);
       }
@@ -211,7 +211,7 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
       }
     }
 
-    if ($selectedPhoneTypeId){
+    if ($selectedPhoneTypeId) {
       $getBrokenPhonesWhereSql .= "AND phone_type_id = '%2' ";
       $queryParameters['2'] = array($selectedPhoneTypeId, 'Int');
     }
@@ -219,12 +219,13 @@ class CRM_Phonenumbervalidator_InvalidNumberRetriever {
     return array('statement' => $getBrokenPhonesWhereSql, 'params' => $queryParameters);
   }
 
-  /*
+  /**
    * Constructs a string that contains this object's member variables.
    */
-  public function getErrorDetails(){
+  public function getErrorDetails() {
     return "<br/>From clause: " . $this->sqlFromClause .
       "<br/>Where clause statement: " . $this->sqlWhereClause['statement'] .
       "<br/>Where clause params: " . print_r($this->sqlWhereClause['params'], TRUE);
   }
+
 }
