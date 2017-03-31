@@ -7,7 +7,7 @@ class CRM_Phonenumbervalidator_Utils {
   /**
    * @return array structured array of phone number regexes
    */
-  public static function getPhoneNumberRegexes(){
+  public static function getPhoneNumberRegexes() {
     return array(
       'Australia' => array(
         array('label' => 'Australian landlines (national)',      'regex' => '^0[^4][0-9]{8}$'),
@@ -59,7 +59,7 @@ class CRM_Phonenumbervalidator_Utils {
         // NXX-NXX-XXXX Where N is any digit 2-9 and X is any digit 0-9
         array('label' => 'North American (America and Canada) (national)',          'regex' => '^[2-9][0-9]{2}[2-9][0-9]{6}$'),
         array('label' => 'North American (America and Canada) (international)',  'regex' => '^001[2-9][0-9]{2}[2-9][0-9]{6}$'),
-      ),        
+      ),
       'Poland' => array(
         array('label' => 'Polish landlines (national)',          'regex' => '^[0|1|2|3|4|9][0-9]{8}$'), // 9 digits.
         array('label' => 'Polish mobiles (national)',            'regex' => '^[5|6|7|8][0-9]{8}$'), //  5, 6, 7 or 8 as lead indicate mobile
@@ -81,12 +81,12 @@ class CRM_Phonenumbervalidator_Utils {
         array('label' => 'Swiss phones (international)',         'regex' => '^0041[0-9]{9}$'),
       ),
     );
-  }  
-    
-  /*
+  }
+
+  /**
    * Install the valid phone number regexes.
    */
-  public static function installPhoneNumberRegexes(){
+  public static function installPhoneNumberRegexes() {
     // Add valid phone matching regexes. This structure allows each to have its own id and name, but be grouped together in the interface.
     $aValidPhonesRegexes = self::getPhoneNumberRegexes();
 
@@ -102,10 +102,10 @@ class CRM_Phonenumbervalidator_Utils {
     }
   }
 
-  /*
+  /**
    * Add a placeholder for the last selected values in the interface.
    */
-  public static function installLastSelectedSettingsDefault(){
+  public static function installLastSelectedSettingsDefault() {
     CRM_Core_BAO_Setting::setItem('-1', 'com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.last_selected_settings');
 
     // Check if the settings are now present (as setItem returns void).
@@ -117,7 +117,7 @@ class CRM_Phonenumbervalidator_Utils {
     }
   }
 
-  /*
+  /**
    * Installs some default valid phone validation rules and other settings in the DB.
    */
   public static function installDefaults() {
@@ -127,7 +127,7 @@ class CRM_Phonenumbervalidator_Utils {
     self::installLastSelectedSettingsDefault();
   }
 
-  /*
+  /**
    * Removes all settings from civicrm DB added by the phonenumbervalidator.
    */
   public static function deleteDbSettings() {
@@ -135,14 +135,14 @@ class CRM_Phonenumbervalidator_Utils {
     CRM_Core_DAO::executeQuery($deleteMysql);
   }
 
-  /* 
+  /**
    * For a given rule id returns the raw regex rule.
    * @param array $regexRuleSets
    * @param string $ruleId
    * @return string regex
    */
-  public static function getRegexRule($regexRuleSets, $ruleId){
-    if (substr_count($ruleId, '_') != 1){
+  public static function getRegexRule($regexRuleSets, $ruleId) {
+    if (substr_count($ruleId, '_') != 1) {
       $errorMessage = "Phone Number Validator getRegexRule: Incorrect number of underscores found." . $ruleId;
       CRM_Core_Error::debug($errorMessage);
       throw new exception($errorMessage);
@@ -159,7 +159,7 @@ class CRM_Phonenumbervalidator_Utils {
 
     $country = $ruleIdArray['country'];
 
-    if (!array_key_exists($ruleIdArray['id'], $regexRuleSets[$ruleIdArray['country']])){
+    if (!array_key_exists($ruleIdArray['id'], $regexRuleSets[$ruleIdArray['country']])) {
       $errorMessage = "Phone Number Validator getRegexRule: Id does not exist for country " . $ruleIdArray['country'] . " - see log error.";
       CRM_Core_Error::debug($errorMessage);
       throw new exception($errorMessage);
@@ -169,17 +169,18 @@ class CRM_Phonenumbervalidator_Utils {
     return $regexRuleSets[$country][$id]['regex'];
   }
 
-  /* 
+  /**
    * For a given list of ids, return the associated rules.
    * @param array $selectedRegexRuleIds
    * @return array of regexes
    */
-  public static function getSelectedRegexRules(array $selectedRegexRuleIds){
+  public static function getSelectedRegexRules(array $selectedRegexRuleIds) {
     $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
     $selectedRegexRules = array();
-    foreach($selectedRegexRuleIds as $selectedRegexRuleId){
+    foreach ($selectedRegexRuleIds as $selectedRegexRuleId) {
       $selectedRegexRules[] = self::getRegexRule($regexRules, $selectedRegexRuleId);
     }
     return $selectedRegexRules;
   }
+
 }
