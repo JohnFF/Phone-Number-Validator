@@ -24,23 +24,23 @@ function _civicrm_api3_phone_number_validator_getinvalidphonescount_spec(&$spec)
 function civicrm_api3_phone_number_validator_getinvalidphonescount($params) {
   $selectedContactTypeId = $params['selectedContactTypeId'];
   $selectedPhoneTypeId   = $params['selectedPhoneTypeId'];
-    
+
   $selectedRegexRuleIds = $params['selectedRegexIds'];
   $selectedSubstitutionRuleIds = $params['selectedAllowCharactersIds'];
-  
+
   $selectedRegexRules = CRM_Phonenumbervalidator_Utils::getSelectedRegexRules($selectedRegexRuleIds);
-  
+
   $invalidNumberRetriever = new CRM_Phonenumbervalidator_InvalidNumberRetriever($selectedRegexRules, $selectedSubstitutionRuleIds, $selectedContactTypeId, $selectedPhoneTypeId);
-    
+
   try {
     $returnValues = $invalidNumberRetriever->getInvalidPhoneNumbersCount();
-    
+
     return civicrm_api3_create_success($returnValues, $params, 'PhoneNumberValidator', 'Getinvalidphonescount');
   }
   catch (Exception $e){
     return civicrm_api3_create_error($e->getMessage() . $invalidNumberRetriever->getErrorDetails());
   }
-  
+
   return civicrm_api3_create_success($returnValues, $params, 'PhoneNumberValidator', 'Getinvalidphonescount');
 }
 
