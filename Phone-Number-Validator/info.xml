@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<extension key="com.civifirst.phonenumbervalidator" type="module">
+  <file>phonenumbervalidator</file>
+  <name>Phone Number Validator</name>
+  <description>The popular UK Phone Number Validator has been rewritten to support multiple countries' phone systems and common formatting options.
+      If your country's phone system is missing, please submit an issue on GitHub so that I can add it.</description>
+  <license>AGPL-3.0</license>
+  <maintainer>
+    <author>John P Kirk</author>
+    <email>john@civifirst.com</email>
+  </maintainer>
+  <urls>
+    <url desc="Main Extension Page">https://github.com/JohnFF/Phone-Number-Validator</url>
+    <url desc="Documentation">https://github.com/JohnFF/Phone-Number-Validator</url>
+    <url desc="Support">https://github.com/JohnFF/Phone-Number-Validator/issues</url>
+    <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
+  </urls>
+  <releaseDate>2015-06-19</releaseDate>
+  <version>2.05</version>
+  <develStage>stable</develStage>
+  <compatibility>
+    <ver>4.4</ver>
+    <ver>4.5</ver>
+    <ver>4.6</ver>
+    <ver>4.7</ver>
+  </compatibility>
+  <comments>The old UK Phone Number Validator can be found at https://github.com/JohnFF/UK-Phone-Number-Validator. 
+      It is considered deprecated. It is also thought of as being v1.0 of this extension.</comments>
+  <civix>
+    <namespace>CRM/Phonenumbervalidator</namespace>
+  </civix>
+</extension>
