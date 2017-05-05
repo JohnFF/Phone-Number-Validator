@@ -152,8 +152,8 @@ CRM.PhoneNumberValidator.retrieveInvalidPhoneNumbers = function (selectedRegexId
 
         cj.each(result.values, function(key, value) {
             cj('#invalidPhonesTable').append(CRM.PhoneNumberValidator.makeTableRow(value['contact_id'],value['display_name'],value['phone_id'],value['phone_number'],value['phone_type_id'],value['phone_ext']));
+            cj('#invalidPhonesTable').trigger('crmLoad'); // Adding .crmEditable() is deprecated, now need to trigger this manually.
         });
         cj('#invalidPhonesDisplay').append("</table>");
-        cj('.crm-editable').crmEditable();
     });
 }
