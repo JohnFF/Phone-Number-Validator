@@ -18,7 +18,7 @@ from
 
 <br/><br/>
 
-<h4>Use rules</h4>
+<h4>Allow numbers that match</h4>
 {foreach from=$regex_rules key=validityRuleSetKey item=validityRuleSet}
     <div class="regex_rule">
     {foreach from=$validityRuleSet key=validityRuleIndex item=validityRule}

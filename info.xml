@@ -24,8 +24,7 @@
     <ver>4.6</ver>
     <ver>4.7</ver>
   </compatibility>
-  <comments>The old UK Phone Number Validator can be found at https://github.com/JohnFF/UK-Phone-Number-Validator. 
-      It is considered deprecated. It is also thought of as being v1.0 of this extension.</comments>
+  <comments>This is the current version. The old UK Phone Number Validator is considered deprecated.</comments>
   <civix>
     <namespace>CRM/Phonenumbervalidator</namespace>
   </civix>
