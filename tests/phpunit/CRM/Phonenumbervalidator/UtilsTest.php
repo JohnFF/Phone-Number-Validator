@@ -106,6 +106,24 @@ class CRM_Phonenumbervalidator_UtilsTest extends \PHPUnit_Framework_TestCase imp
     }
   }
 
+//  public function testMalaysianRegexRuleMatches() {
+//    $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
+//    $malaysiaRegexRules = $regexRules['Malaysia'];
+//
+//    $validMalaysianNumbers = array(
+//      '0321702200', // National.
+//      '0060321702200', // International.
+//    );
+//
+//    foreach ($validMalaysianNumbers as $validMalaysianNumber) {
+//      $matchCount = 0;
+//      foreach ($malaysiaRegexRules as $malaysianRegexRule) {
+//        $matchCount += preg_match('/' . $malaysianRegexRule['regex'] . '/', $validMalaysianNumber);
+//      }
+//      $this->assertEquals(1, $matchCount, "Failed on $validMalaysianNumber.");
+//    }
+//  }
+
   /**
    * Test the retrieval of the regices.
    */
