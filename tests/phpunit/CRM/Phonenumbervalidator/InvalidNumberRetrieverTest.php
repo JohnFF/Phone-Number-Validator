@@ -36,7 +36,7 @@ class CRM_Phonenumbervalidator_InvalidNumberRetrieverTest extends \PHPUnit_Frame
     parent::tearDown();
   }
 
-  function testBuildReplacementMysqlString () {
+  public function testBuildReplacementMysqlString() {
     // Test hyphens and brackets.
     $selectedAllowCharactersArray = array('hyphens', 'brackets');
     $expectedOutput = "REPLACE(REPLACE(REPLACE(phone, '-', ''), '(', ''), ')', '')";
@@ -50,7 +50,7 @@ class CRM_Phonenumbervalidator_InvalidNumberRetrieverTest extends \PHPUnit_Frame
     $this->assertEquals($expectedOutput, $output, "Found " . print_r($output, TRUE));
   }
 
-  function testBuildFromStatementMyqlString () {
+  public function testBuildFromStatementMyqlString() {
     $selectedRegexRuleIds = array('Britain_0', 'Britain_1', 'Britain_2', 'Britain_3');
     $selectedAllowCharacterRules = array('hyphens', 'brackets');
 
@@ -66,7 +66,7 @@ class CRM_Phonenumbervalidator_InvalidNumberRetrieverTest extends \PHPUnit_Frame
     $this->assertEquals($expectedOutput, $output, "Found " . print_r($output, TRUE));
   }
 
-  function testBuildWhereStatementMyqlString () {
+  public function testBuildWhereStatementMyqlString() {
     $testData = array(
       array(
         'contactTypeId' => '1',
@@ -86,16 +86,17 @@ class CRM_Phonenumbervalidator_InvalidNumberRetrieverTest extends \PHPUnit_Frame
         'expectedStatementOutput' => "WHERE 1 AND contact_type LIKE '%%1%' ",
         'expectedParamsOutput' => array(1 => array(0 => 'Individual', 1 => 'String', 2 => 2)),
       ),
-//      array('contactTypeId' => '1000', 'phoneTypeId' => '1', 'expectedOutput' => ''),
-//      array('contactTypeId' => '1', 'phoneTypeId' => '1000', 'expectedOutput' => ''),
-//      array('contactTypeId' => 'string where id should be', 'phoneTypeId' => '1', 'expectedOutput' => ''),
-//      array('contactTypeId' => '1', 'phoneTypeId' => 'string where id should be', 'expectedOutput' => ''),
+      // array('contactTypeId' => '1000', 'phoneTypeId' => '1', 'expectedOutput' => ''),
+      // array('contactTypeId' => '1', 'phoneTypeId' => '1000', 'expectedOutput' => ''),
+      // array('contactTypeId' => 'string where id should be', 'phoneTypeId' => '1', 'expectedOutput' => ''),
+      // array('contactTypeId' => '1', 'phoneTypeId' => 'string where id should be', 'expectedOutput' => ''),
     );
 
-    foreach($testData as $eachTest){
+    foreach ($testData as $eachTest) {
       $actualOutput = CRM_Phonenumbervalidator_InvalidNumberRetriever::buildWhereStatementMysqlString($eachTest['contactTypeId'], $eachTest['phoneTypeId']);
       $this->assertEquals($eachTest['expectedStatementOutput'], $actualOutput['statement'], "Test failed, actual output was: " . print_r($actualOutput['statement'], TRUE));
       $this->assertEquals($eachTest['expectedParamsOutput'], $actualOutput['params'], "Test failed, actual output was: " . print_r($actualOutput['params'], TRUE));
     }
   }
+
 }

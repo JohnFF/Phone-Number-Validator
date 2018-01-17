@@ -30,7 +30,7 @@ class CRM_Phonenumbervalidator_UtilsTest extends \PHPUnit_Framework_TestCase imp
   /**
    * Delete the old settings, reinstall them, and test that they made it in ok.
    */
-  function testInstallAndUninstallSettings(){
+  public function testInstallAndUninstallSettings() {
     CRM_Phonenumbervalidator_Utils::deleteDbSettings();
 
     Civi::settings()->loadValues();
@@ -51,7 +51,7 @@ class CRM_Phonenumbervalidator_UtilsTest extends \PHPUnit_Framework_TestCase imp
   /**
    * Test the British regex rules. To keep it a pure test, this assumes all the character substitution has already been done.
    */
-  function testBritishRegexRuleMatches () {
+  public function testBritishRegexRuleMatches() {
     $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
     $britishRegexRules = $regexRules['Britain'];
 
@@ -88,7 +88,7 @@ class CRM_Phonenumbervalidator_UtilsTest extends \PHPUnit_Framework_TestCase imp
   /**
    * Test the South Africa rules.
    */
-  function testSouthAfricanRegexRuleMatches () {
+  public function testSouthAfricanRegexRuleMatches() {
     $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
     $southAfricanRegexRules = $regexRules['South Africa'];
 
@@ -127,7 +127,7 @@ class CRM_Phonenumbervalidator_UtilsTest extends \PHPUnit_Framework_TestCase imp
   /**
    * Test the retrieval of the regices.
    */
-  function testGetRegexRule(){
+  public function testGetRegexRule() {
     $regexRuleSets = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
 
     $this->assertEquals('^0(([^7][0-9]{9})|(1[0-9]{8}))$', CRM_Phonenumbervalidator_Utils::getRegexRule($regexRuleSets, 'Britain_0'));
@@ -147,4 +147,5 @@ class CRM_Phonenumbervalidator_UtilsTest extends \PHPUnit_Framework_TestCase imp
     );
     CRM_Phonenumbervalidator_Utils::getRegexRule($regexRuleSets, 'invalidid');
   }
+
 }
