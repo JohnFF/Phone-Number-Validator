@@ -49,6 +49,12 @@ class CRM_Phonenumbervalidator_Utils {
         array('label' => 'Irish phones (national)',              'regex' => '^1[0-9]{7}$'), // TODO can we include mobiles v landlines distinction?
         array('label' => 'Irish phones (international)',         'regex' => '^00353[0-9]{7}$'),
       ),
+      'Malaysia' => array(
+        array('label' => 'Norwegian landlines (national)',       'regex' => '^[^4|9][0-9]{7}$'),
+        array('label' => 'Norwegian mobiles (national)',         'regex' => '^[4|9][0-9]{7}$'),
+        array('label' => 'Norwegian landlines (international)',  'regex' => '^0047[^4|9][0-9]{7}$'),
+        array('label' => 'Norwegian mobiles (international)',    'regex' => '^0047[4|9][0-9]{7}$'),
+      ),
       'Norway' => array(
         array('label' => 'Norwegian landlines (national)',       'regex' => '^[^4|9][0-9]{7}$'),
         array('label' => 'Norwegian mobiles (national)',         'regex' => '^[4|9][0-9]{7}$'),
@@ -77,6 +83,12 @@ class CRM_Phonenumbervalidator_Utils {
         array('label' => 'South African landlines (international)',    'regex' => '^0027[1-8][0-9]{8}$'),
       ),
       'Switzerland' => array(
+        array('label' => 'Swiss phones (national)',              'regex' => '^0[0-9]{9}$'),
+        array('label' => 'Swiss phones (international)',         'regex' => '^0041[0-9]{9}$'),
+      ),
+      'Vanatuan' => array(
+        //      Land line numbers are +678 22222
+// and Mobiles are +678 5555555
         array('label' => 'Swiss phones (national)',              'regex' => '^0[0-9]{9}$'),
         array('label' => 'Swiss phones (international)',         'regex' => '^0041[0-9]{9}$'),
       ),
