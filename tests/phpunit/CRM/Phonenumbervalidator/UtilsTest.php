@@ -48,12 +48,29 @@ class CRM_Phonenumbervalidator_UtilsTest extends \PHPUnit_Framework_TestCase imp
     $this->assertEquals($expectedValues, $actualValues, "Found " . print_r($actualValues, TRUE));
   }
 
+  public function regexRulesMatchInternalTest($nation, $invalidPhoneNumbers, $validPhoneNumbers) {
+    $allRegexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
+    $nationalRegexRules = $allRegexRules[$nation];
+
+    foreach ($invalidPhoneNumbers as $invalidPhoneNumber) {
+      foreach ($nationalRegexRules as $eachNationalRegexRule) {
+        $this->assertEquals(0, preg_match('/' . $eachNationalRegexRule['regex'] . '/', $invalidPhoneNumber));
+      }
+    }
+
+    foreach ($validPhoneNumbers as $validPhoneNumbers) {
+      $matchCount = 0;
+      foreach ($nationalRegexRules as $eachNationalRegexRule) {
+        $matchCount += preg_match('/' . $eachNationalRegexRule['regex'] . '/', $validPhoneNumbers);
+      }
+      $this->assertEquals(1, $matchCount, "Failed on $validPhoneNumbers.");
+    }
+  }
+
   /**
    * Test the British regex rules. To keep it a pure test, this assumes all the character substitution has already been done.
    */
   public function testBritishRegexRuleMatches() {
-    $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
-    $britishRegexRules = $regexRules['Britain'];
 
     $invalidBritishNumbers = array(
       '0711111111', // too short
@@ -63,12 +80,6 @@ class CRM_Phonenumbervalidator_UtilsTest extends \PHPUnit_Framework_TestCase imp
       '0220411111', // 10-digit landline beginning with 02
     );
 
-    foreach ($invalidBritishNumbers as $invalidBritishNumber) {
-      foreach ($britishRegexRules as $britishRegexRule) {
-        $this->assertEquals(0, preg_match('/' . $britishRegexRule['regex'] . '/', $invalidBritishNumber));
-      }
-    }
-
     $validBritishNumbers = array(
       '07111111111', // 11-digit mobile
       '02081111111', // 11-digit landline
@@ -76,57 +87,36 @@ class CRM_Phonenumbervalidator_UtilsTest extends \PHPUnit_Framework_TestCase imp
       '0044120411111', // 10-digit international landline beginning with 00441
     );
 
-    foreach ($validBritishNumbers as $validBritishNumber) {
-      $matchCount = 0;
-      foreach ($britishRegexRules as $britishRegexRule) {
-        $matchCount += preg_match('/' . $britishRegexRule['regex'] . '/', $validBritishNumber);
-      }
-      $this->assertEquals(1, $matchCount, "Failed on $validBritishNumber.");
-    }
+    $this->regexRulesMatchInternalTest('Britain', $invalidBritishNumbers, $validBritishNumbers);
   }
 
   /**
    * Test the South Africa rules.
    */
   public function testSouthAfricanRegexRuleMatches() {
-    $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
-    $southAfricanRegexRules = $regexRules['South Africa'];
-
     $validSouthAfricanNumbers = array(
       '0123456789', // National.
       '0027123456789', // International.
     );
 
-    foreach ($validSouthAfricanNumbers as $validSouthAfricanNumber) {
-      $matchCount = 0;
-      foreach ($southAfricanRegexRules as $southAfricanRegexRule) {
-        $matchCount += preg_match('/' . $southAfricanRegexRule['regex'] . '/', $validSouthAfricanNumber);
-      }
-      $this->assertEquals(1, $matchCount, "Failed on $validSouthAfricanNumber.");
-    }
+    $invalidNumbers = array(NULL, 0, 'invalid number');
+
+    $this->regexRulesMatchInternalTest('South Africa', $invalidNumbers, $validSouthAfricanNumbers);
   }
 
   public function testMalaysianRegexRuleMatches() {
-    $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
-    $malaysiaRegexRules = $regexRules['Malaysia'];
 
     $validMalaysianNumbers = array(
       '0321702200', // National.
       '0060321702200', // International.
     );
 
-    foreach ($validMalaysianNumbers as $validMalaysianNumber) {
-      $matchCount = 0;
-      foreach ($malaysiaRegexRules as $malaysianRegexRule) {
-        $matchCount += preg_match('/' . $malaysianRegexRule['regex'] . '/', $validMalaysianNumber);
-      }
-      $this->assertEquals(1, $matchCount, "Failed on $validMalaysianNumber.");
-    }
+    $invalidNumbers = array(NULL, 0, 'invalid number');
+
+    $this->regexRulesMatchInternalTest('Malaysia', $invalidNumbers, $validMalaysianNumbers);
   }
 
   public function testVanuatuanRegexRuleMatches() {
-    $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
-    $vanuatuaRegexRules = $regexRules['Vanuatu'];
 
     $validVanuatuanNumbers = array(
       '55555', // National.
@@ -135,13 +125,9 @@ class CRM_Phonenumbervalidator_UtilsTest extends \PHPUnit_Framework_TestCase imp
       '006785594400', // International.
     );
 
-    foreach ($validVanuatuanNumbers as $validVanuatuanNumber) {
-      $matchCount = 0;
-      foreach ($vanuatuaRegexRules as $vanutuanRegexRule) {
-        $matchCount += preg_match('/' . $vanutuanRegexRule['regex'] . '/', $validVanuatuanNumber);
-      }
-      $this->assertEquals(1, $matchCount, "Failed on $validVanuatuanNumber.");
-    }
+    $invalidNumbers = array(NULL, 0, 'invalid number');
+    
+    $this->regexRulesMatchInternalTest('Vanuatu', $invalidNumbers, $validVanuatuanNumbers);
   }
 
   /**
