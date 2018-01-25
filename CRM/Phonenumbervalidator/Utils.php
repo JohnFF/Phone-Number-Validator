@@ -50,10 +50,8 @@ class CRM_Phonenumbervalidator_Utils {
         array('label' => 'Irish phones (international)',         'regex' => '^00353[0-9]{7}$'),
       ),
       'Malaysia' => array(
-        array('label' => 'Norwegian landlines (national)',       'regex' => '^[^4|9][0-9]{7}$'),
-        array('label' => 'Norwegian mobiles (national)',         'regex' => '^[4|9][0-9]{7}$'),
-        array('label' => 'Norwegian landlines (international)',  'regex' => '^0047[^4|9][0-9]{7}$'),
-        array('label' => 'Norwegian mobiles (international)',    'regex' => '^0047[4|9][0-9]{7}$'),
+        array('label' => 'Malaysian (national)',                 'regex' => '^[03|0|01|011][0-9]{9}$'),
+        array('label' => 'Malaysian (international)',            'regex' => '^006[03|0|01|011][0-9]{9}$'),
       ),
       'Norway' => array(
         array('label' => 'Norwegian landlines (national)',       'regex' => '^[^4|9][0-9]{7}$'),
