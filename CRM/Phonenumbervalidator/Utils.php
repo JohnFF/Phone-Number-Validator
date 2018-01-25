@@ -86,11 +86,9 @@ class CRM_Phonenumbervalidator_Utils {
         array('label' => 'Swiss phones (national)',              'regex' => '^0[0-9]{9}$'),
         array('label' => 'Swiss phones (international)',         'regex' => '^0041[0-9]{9}$'),
       ),
-      'Vanatuan' => array(
-        //      Land line numbers are +678 22222
-// and Mobiles are +678 5555555
-        array('label' => 'Swiss phones (national)',              'regex' => '^0[0-9]{9}$'),
-        array('label' => 'Swiss phones (international)',         'regex' => '^0041[0-9]{9}$'),
+      'Vanuatu' => array(
+        array('label' => 'Vanuatuan phones (national)',              'regex' => '^[0-9]{5,7}$'),
+        array('label' => 'Vanuatuan phones (international)',         'regex' => '^00678[0-9]{5,7}$'),
       ),
     );
   }

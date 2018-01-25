@@ -124,6 +124,26 @@ class CRM_Phonenumbervalidator_UtilsTest extends \PHPUnit_Framework_TestCase imp
     }
   }
 
+  public function testVanuatuanRegexRuleMatches() {
+    $regexRules = CRM_Core_BAO_Setting::getItem('com.civifirst.phonenumbervalidator', 'com.civifirst.phonenumbervalidator.regex_rules');
+    $vanuatuaRegexRules = $regexRules['Vanuatu'];
+
+    $validVanuatuanNumbers = array(
+      '55555', // National.
+      '7777777', // National.
+      '0067823111', // International.
+      '006785594400', // International.
+    );
+
+    foreach ($validVanuatuanNumbers as $validVanuatuanNumber) {
+      $matchCount = 0;
+      foreach ($vanuatuaRegexRules as $vanutuanRegexRule) {
+        $matchCount += preg_match('/' . $vanutuanRegexRule['regex'] . '/', $validVanuatuanNumber);
+      }
+      $this->assertEquals(1, $matchCount, "Failed on $validVanuatuanNumber.");
+    }
+  }
+
   /**
    * Test the retrieval of the regices.
    */
