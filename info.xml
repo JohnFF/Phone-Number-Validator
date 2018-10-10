@@ -25,6 +25,7 @@
     <ver>4.7</ver>
   </compatibility>
   <comments>This is the current version. The old UK Phone Number Validator is considered deprecated.</comments>
+  <category>Data Cleaning</category>
   <civix>
     <namespace>CRM/Phonenumbervalidator</namespace>
   </civix>
