@@ -1,5 +1,3 @@
-{include file="CRM/common/crmeditable.tpl"}
-
 Check <select id="selectedPhoneType" selectedValue="{$selected_show_phone_type}">
         <option value="">all phone types</option>
         {crmAPI var="OptionValues" entity="OptionValue" action="get" sequential="1" option_group_name="phone_type" option_sort="weight"}
