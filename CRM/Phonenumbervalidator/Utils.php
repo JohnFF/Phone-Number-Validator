@@ -53,6 +53,12 @@ class CRM_Phonenumbervalidator_Utils {
         array('label' => 'Malaysian (national)',                 'regex' => '^[03|0|01|011][0-9]{9}$'),
         array('label' => 'Malaysian (international)',            'regex' => '^006[03|0|01|011][0-9]{9}$'),
       ),
+      'Nigeria' => array(
+        array('label' => 'Nigeria landlines (national)',                   'regex' => '^[0-8]?[0-9][0-9]{5,7}$'), // area code is 1-2 digits, local number is 5-7 digits, two-digit area code can't start with 9.
+        array('label' => 'Nigeria mobiles (national)',                   'regex' => '^0?[7-9][0-1][0-9]{8}$'), // leading zero is optional
+        array('label' => 'Nigeria landlines (international)',              'regex' => '^00234[0-8]?[0-9][0-9]{5,7}$'), // International calls can drop leading zero on one-digit area codes
+        array('label' => 'Nigeria mobiles (international)',              'regex' => '^00234[7-9][0-1][0-9]{8}$'),
+      ),
       'Norway' => array(
         array('label' => 'Norwegian landlines (national)',       'regex' => '^[^4|9][0-9]{7}$'),
         array('label' => 'Norwegian mobiles (national)',         'regex' => '^[4|9][0-9]{7}$'),
